@@ -1,8 +1,10 @@
 import matplotlib.animation as animation
 import matplotlib.pyplot as plt
 
+import numpy as np
 
-def animate_forecast(forecasts, true_values, date_offset, interval=300):
+
+def animate_forecast(forecasts, true_values, date_offset, y_lim_mod=0.2, interval=300, ylims=None):
     fig, ax = plt.subplots(figsize=(10, 5), constrained_layout=True)
     date_start = forecasts[0].index[0] - date_offset
     date_end = forecasts[0].index[-1] + date_offset
@@ -13,13 +15,28 @@ def animate_forecast(forecasts, true_values, date_offset, interval=300):
     ax.legend()
 
     def animate(timestep_index):
-        forecast_line.set_data(forecasts[timestep_index].index, forecasts[timestep_index].values)
+        current_forecast = forecasts[timestep_index]
 
-        date_start = forecasts[timestep_index].index[0] - date_offset
-        date_end = forecasts[timestep_index].index[-1] + date_offset
+        date_start = current_forecast.index[0] - date_offset
+        date_end = current_forecast.index[-1] + date_offset
 
-        true_values_lines.set_data(true_values.loc[date_start:date_end].index, true_values.loc[date_start:date_end].values)
+        current_true = true_values.loc[date_start:date_end]
+
+        forecast_line.set_data(current_forecast.index, current_forecast.values)
+
+        true_values_lines.set_data(current_true.index, current_true.values)
         ax.set_xlim((date_start, date_end))
+
+        if ylims:
+            ax.set_ylim((ylims[0], ylims[1]))
+        elif y_lim_mod:
+            ymax = max(np.max(current_true.values), np.max(current_forecast.values))
+            ymin = min(np.min(current_true.values), np.min(current_forecast.values))
+            amp = ymax - ymin
+
+            ymax += amp * y_lim_mod
+            ymin -= amp * y_lim_mod
+            ax.set_ylim((ymin, ymax))
 
     ani = animation.FuncAnimation(fig, animate, interval=interval, frames=len(forecasts), blit=False)
     return ani
