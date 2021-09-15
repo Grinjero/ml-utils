@@ -18,13 +18,8 @@ def split_by_holes(series, min_hole_size, min_segment_size, is_nan_hole=True, is
     """
     assert min_hole_size > 0 and min_segment_size > 0, "Minimum hole and segment size must be greater than 0"
 
-    series = remove_following(series, is_nan_hole, is_inf_hole, hole_values)
-    print("After removing following")
-    print(series.to_numpy())
-
-    series = remove_leading(series, is_nan_hole, is_inf_hole, hole_values)
-    print("After removing leading")
-    print(series.to_numpy())
+    # series = remove_following(series, is_nan_hole, is_inf_hole, hole_values)
+    # series = remove_leading(series, is_nan_hole, is_inf_hole, hole_values)
 
     bool_mask = series.map(lambda x: element_checker(x, is_nan_hole, is_inf_hole, hole_values))
 
@@ -55,12 +50,10 @@ def split_by_holes(series, min_hole_size, min_segment_size, is_nan_hole=True, is
             start_index = i
 
         if segment_counter >= min_segment_size and in_segment is False:
-            print(f"Segment {series.iloc[i]}")
             min_segment_recognized()
 
     def entered_hole():
         nonlocal hole_counter, index_pairs, segment_counter, in_segment, start_index, end_index, i, hole_start_index
-        print(f"Hole {series.iloc[i - 1]}")
         if in_segment:
             # end_index = i - 1
             end_index = hole_start_index - 1
