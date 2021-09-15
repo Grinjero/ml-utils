@@ -16,7 +16,7 @@ def element_checker(value, check_nan, check_inf, check_values=None):
         is_in = is_in | np.isinf(value)
     if check_nan:
         is_in = is_in | np.isnan(value)
-    if check_values:
+    if check_values is not None:
         is_in = is_in | np.isin(value, check_values)
 
     return is_in

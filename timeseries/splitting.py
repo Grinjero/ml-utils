@@ -86,11 +86,24 @@ def split_by_holes(series, min_hole_size, min_segment_size, is_nan_hole=True, is
 
 
 if __name__ == "__main__":
-    series = pd.Series([np.NaN, np.NaN, np.NaN, 1,  2, 3, 4, 5, np.NaN, 5, 7, 9, np.NaN, np.NaN, np.NaN, 10, 11,
-                        np.NaN, np.NaN, 12, np.NaN, 13, 14, np.NaN])
+    # print("NaN test")
+    # series = pd.Series([np.NaN, np.NaN, np.NaN, 1,  2, 3, 4, 5, np.NaN, 5, 7, 9, np.NaN, np.NaN, np.NaN, 10, 11,
+    #                     np.NaN, np.NaN, 12, np.NaN, 13, 14, np.NaN])
+    # print("Original")
+    # print(series.to_numpy())
+    # index_pairs = split_by_holes(series, min_hole_size=2, min_segment_size=2)
+    #
+    # print("After splitting")
+    # for index_start, index_end in index_pairs:
+    #     print(series.loc[index_start:index_end].to_numpy())
+
+
+    print("0 test")
+    series = pd.Series([0, 0, 0, 1, 2, 3, 4, 5, 0, 5, 7, 9, 0, 0, 0, 10, 11,
+                        0, 0, 12, 0, 13, 14, 0])
     print("Original")
     print(series.to_numpy())
-    index_pairs = split_by_holes(series, min_hole_size=2, min_segment_size=2)
+    index_pairs = split_by_holes(series, min_hole_size=2, min_segment_size=2, hole_values=0)
 
     print("After splitting")
     for index_start, index_end in index_pairs:
