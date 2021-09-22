@@ -2,6 +2,8 @@ import numpy as np
 
 
 def extract_exog_features(dataset, ex_features):
+    if ex_features is None:
+        return None
     ex = [dataset[feature_name].values for feature_name in ex_features]
     ex = np.stack(ex, axis=1)
     return ex
