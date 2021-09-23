@@ -85,6 +85,14 @@ def split_by_holes(series, min_hole_size, min_segment_size, is_nan_hole=True, is
     return index_pairs
 
 
+def segment_lengths(index_pairs):
+    segment_lengths = []
+    for index_start, index_end in index_pairs:
+        segment_lengths.append(index_end - index_start)
+
+    return segment_lengths
+
+
 if __name__ == "__main__":
     # print("NaN test")
     # series = pd.Series([np.NaN, np.NaN, np.NaN, 1,  2, 3, 4, 5, np.NaN, 5, 7, 9, np.NaN, np.NaN, np.NaN, 10, 11,
