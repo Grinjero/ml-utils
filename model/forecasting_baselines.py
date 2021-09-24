@@ -1,20 +1,55 @@
 import pandas as pd
 import numpy as np
 
+from model import forecasting_interface
 
-class NaiveSeasonal:
+
+class BaselineBase(forecasting_interface.ForecastingModelInterface):
+    def __init__(self, whole_series, target_column):
+        self._series = whole_series
+        self.target_column = target_column
+
+    @property
+    def series(self):
+        return self._extract_series(self._series)
+
+    def fit(self, train_data):
+        self._series = self._extract_series(train_data)
+
+    def _extract_series(self, outside_data):
+        if self.target_column and isinstance(outside_data, pd.Series) is False:
+            return outside_data[self.target_column]
+        else:
+            return outside_data
+
+    def eval(self, test_data_df, horizon_length):
+        test_series = self._extract_series(test_data_df)
+        union = pd.concat([self.series, test_series], axis=0)
+        reset_union = union.reset_index()
+        self._series = reset_union.drop_duplicates(subset=union.index.name).set_index(union.index.name)
+
+        forecasting_indices = test_series.index[:len(test_series) - horizon_length - 1]
+        return [self.forecast(horizon_length, fp, index_or_label=True) for fp in forecasting_indices]
+
+
+class NaiveSeasonal(BaselineBase):
     """
     Forecasted value is the value before seasonal_period of the currently forecasted index
     """
-    def __init__(self, whole_series: pd.Series, seasonal_period):
+    def __init__(self, seasonal_period, whole_series: pd.Series=None, target_column=None):
         """
         :param whole_series: no worries, the model doesn't peek into the future
         :param seasonal_period:
+        :param target_column: if given, whole_series is treated as a dataframe
         """
+        super().__init__(whole_series, target_column)
         assert seasonal_period > 1, "Seasonal period must be greater than 1"
 
         self.seasonal_period = seasonal_period
-        self.series = whole_series
+
+    @property
+    def name(self):
+        return f"NaiveSeasonal_{self.seasonal_period}"
 
     def forecast(self, horizon_size, forecast_point_index, dynamic=True, index_or_label=False):
         """
@@ -52,21 +87,22 @@ class NaiveSeasonal:
         return pd.Series(data=forecasted_values, index=forecasted_indices)
 
 
-class Naive:
+class Naive(BaselineBase):
     """
     Simply returns the last know value as the prediction for the whole horizon
     """
 
-    def __init__(self, whole_series: pd.Series):
+    def __init__(self, whole_series: pd.Series=None, target_column=None):
         """
         :param whole_series: no worries, the model doesn't peek into the future
         """
-        self.series = whole_series
+        super().__init__(whole_series, target_column)
 
-    def fit(self, whole_series):
-        """
-        :return:
-        """
+
+    @property
+    def name(self):
+        return "Naive"
+
 
     def forecast(self, horizon_size, forecast_point_index, dynamic=True, index_or_label=False):
         """
@@ -95,20 +131,24 @@ class Naive:
         return pd.Series(data=forecasted_values, index=forecasted_indices)
 
 
-class MovingAverage:
+class MovingAverage(BaselineBase):
     """
     Forecasted value is the moving average of a sliding window. For longer horizons (larger than window_size) the sliding
      window calculates the moving average of previously calculated averages
     """
-    def __init__(self, whole_series: pd.Series, window_size):
+    def __init__(self, window_size, whole_series: pd.Series=None, target_column=None):
         """
         :param whole_series: no worries, the model doesn't peek into the future
         :param window_size: size of the moving average window
         """
+        super().__init__(whole_series, target_column)
         assert window_size > 1, "Sliding window size must be greater than 1"
 
         self.window_size = window_size
-        self.series = whole_series
+
+    @property
+    def name(self):
+        return f"MovingAverage_{self.window_size}"
 
     def forecast(self, horizon_size, forecast_point_index, dynamic=True, index_or_label=False):
         """
@@ -144,12 +184,15 @@ class MovingAverage:
         return pd.Series(data=forecasted_values, index=forecasted_indices)
 
 
-class SeasonalMovingAverage:
-    def __init__(self, whole_series: pd.Series, window_size, seasonal_period):
-        self.series = whole_series
+class SeasonalMovingAverage(BaselineBase):
+    def __init__(self, window_size, seasonal_period, whole_series: pd.Series=None, target_column=None):
+        super().__init__(whole_series, target_column)
         self.window_size = window_size
         self.seasonal_period = seasonal_period
 
+    @property
+    def name(self):
+        return f"SeasonalMovingAverage_{self.window_size}_{self.seasonal_period}"
 
     def forecast(self, horizon_size, forecast_point_index, dynamic=True, index_or_label=False):
         """
