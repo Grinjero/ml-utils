@@ -28,13 +28,6 @@ model.sarimax\_wrapper module
    :undoc-members:
    :show-inheritance:
 
-model.test module
------------------
-
-.. automodule:: model.test
-   :members:
-   :undoc-members:
-   :show-inheritance:
 
 Module contents
 ---------------

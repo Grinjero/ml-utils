@@ -44,9 +44,35 @@ exclude_patterns = []
 # The theme to use for HTML and HTML Help pages.  See the documentation for
 # a list of builtin themes.
 #
-html_theme = 'alabaster'
+html_theme = 'classic'
 
 # Add any paths that contain custom static files (such as style sheets) here,
 # relative to this directory. They are copied after the builtin static files,
 # so a file named "default.css" will overwrite the builtin "default.css".
 html_static_path = ['_static']
+
+# html_theme_options = {
+#     'headerbordercolor': 'gray'
+# }
+
+
+# -- Skip select files
+modules_to_skip = ["model.test"]
+
+
+def skip_modules(app, what, name, obj, skip, options):
+    print("Skipping ", skip, name)
+    return ((what == "module") and (name in modules_to_skip)) or skip
+    # if (what == "module") and name in modules_to_skip:
+    #     return True
+    # else:
+    #     return skip
+
+
+def text_process(app, what, name, obj, options, lines):
+    print(what, name, lines)
+
+
+def setup(app):
+    app.connect('autodoc-skip-member', skip_modules)
+    app.connect('autodoc-process-docstring', text_process)

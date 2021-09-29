@@ -8,29 +8,41 @@
 
     <title>plotting package &#8212; ml-utils  documentation</title>
     <link rel="stylesheet" type="text/css" href="_static/pygments.css" />
-    <link rel="stylesheet" type="text/css" href="_static/alabaster.css" />
+    <link rel="stylesheet" type="text/css" href="_static/classic.css" />
+    
     <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js"></script>
     <script src="_static/jquery.js"></script>
     <script src="_static/underscore.js"></script>
     <script src="_static/doctools.js"></script>
+    
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
     <link rel="next" title="timeseries package" href="timeseries.html" />
-    <link rel="prev" title="model package" href="model.html" />
-   
-  <link rel="stylesheet" href="_static/custom.css" type="text/css" />
-  
-  
-  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
-
+    <link rel="prev" title="model package" href="model.html" /> 
   </head><body>
-  
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="timeseries.html" title="timeseries package"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="model.html" title="model package"
+             accesskey="P">previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="index.html">ml-utils  documentation</a> &#187;</li>
+        <li class="nav-item nav-item-this"><a href="">plotting package</a></li> 
+      </ul>
+    </div>  
 
     <div class="document">
       <div class="documentwrapper">
         <div class="bodywrapper">
-          
-
           <div class="body" role="main">
             
   <section id="plotting-package">
@@ -66,6 +78,16 @@ need it to run)</p>
 </section>
 <section id="module-plotting.general">
 <span id="plotting-general-module"></span><h2>plotting.general module<a class="headerlink" href="#module-plotting.general" title="Permalink to this headline">¶</a></h2>
+<dl class="py function">
+<dt class="sig sig-object py" id="plotting.general._construct_plotting_kwargs">
+<span class="sig-prename descclassname"><span class="pre">plotting.general.</span></span><span class="sig-name descname"><span class="pre">_construct_plotting_kwargs</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#plotting.general._construct_plotting_kwargs" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="plotting.general._plot_corresponding_to_type">
+<span class="sig-prename descclassname"><span class="pre">plotting.general.</span></span><span class="sig-name descname"><span class="pre">_plot_corresponding_to_type</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">series</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ax</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#plotting.general._plot_corresponding_to_type" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
 <dl class="py function">
 <dt class="sig sig-object py" id="plotting.general.plot_correlation_matrix">
 <span class="sig-prename descclassname"><span class="pre">plotting.general.</span></span><span class="sig-name descname"><span class="pre">plot_correlation_matrix</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">df</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">figsize</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#plotting.general.plot_correlation_matrix" title="Permalink to this definition">¶</a></dt>
@@ -116,48 +138,37 @@ etc. mean and std of a variable</p>
 </section>
 
 
+            <div class="clearer"></div>
           </div>
-          
         </div>
       </div>
       <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
         <div class="sphinxsidebarwrapper">
-<h1 class="logo"><a href="index.html">ml-utils</a></h1>
-
-
-
-
-
-
-
-
-<h3>Navigation</h3>
-<ul class="current">
-<li class="toctree-l1"><a class="reference internal" href="documenting.html">documenting package</a></li>
-<li class="toctree-l1"><a class="reference internal" href="evaluation.html">evaluation package</a></li>
-<li class="toctree-l1"><a class="reference internal" href="generators.html">generators package</a></li>
-<li class="toctree-l1"><a class="reference internal" href="metrics.html">metrics package</a></li>
-<li class="toctree-l1"><a class="reference internal" href="model.html">model package</a></li>
-<li class="toctree-l1 current"><a class="current reference internal" href="#">plotting package</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="#submodules">Submodules</a></li>
-<li class="toctree-l2"><a class="reference internal" href="#module-plotting.forecasting">plotting.forecasting module</a></li>
-<li class="toctree-l2"><a class="reference internal" href="#module-plotting.general">plotting.general module</a></li>
-<li class="toctree-l2"><a class="reference internal" href="#module-plotting.timeseries">plotting.timeseries module</a></li>
-<li class="toctree-l2"><a class="reference internal" href="#module-plotting">Module contents</a></li>
+  <h3><a href="index.html">Table of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">plotting package</a><ul>
+<li><a class="reference internal" href="#submodules">Submodules</a></li>
+<li><a class="reference internal" href="#module-plotting.forecasting">plotting.forecasting module</a></li>
+<li><a class="reference internal" href="#module-plotting.general">plotting.general module</a></li>
+<li><a class="reference internal" href="#module-plotting.timeseries">plotting.timeseries module</a></li>
+<li><a class="reference internal" href="#module-plotting">Module contents</a></li>
 </ul>
 </li>
-<li class="toctree-l1"><a class="reference internal" href="timeseries.html">timeseries package</a></li>
 </ul>
 
-<div class="relations">
-<h3>Related Topics</h3>
-<ul>
-  <li><a href="index.html">Documentation overview</a><ul>
-      <li>Previous: <a href="model.html" title="previous chapter">model package</a></li>
-      <li>Next: <a href="timeseries.html" title="next chapter">timeseries package</a></li>
-  </ul></li>
-</ul>
-</div>
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="model.html"
+                        title="previous chapter">model package</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="timeseries.html"
+                        title="next chapter">timeseries package</a></p>
+  <div role="note" aria-label="source link">
+    <h3>This Page</h3>
+    <ul class="this-page-menu">
+      <li><a href="_sources/plotting.rst.txt"
+            rel="nofollow">Show Source</a></li>
+    </ul>
+   </div>
 <div id="searchbox" style="display: none" role="search">
   <h3 id="searchlabel">Quick search</h3>
     <div class="searchformwrapper">
@@ -168,32 +179,32 @@ etc. mean and std of a variable</p>
     </div>
 </div>
 <script>$('#searchbox').show(0);</script>
-
-
-
-
-
-
-
-
         </div>
       </div>
       <div class="clearer"></div>
     </div>
-    <div class="footer">
-      &copy;2021, Filip Bronić.
-      
-      |
-      Powered by <a href="http://sphinx-doc.org/">Sphinx 4.2.0</a>
-      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.12</a>
-      
-      |
-      <a href="_sources/plotting.rst.txt"
-          rel="nofollow">Page source</a>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="timeseries.html" title="timeseries package"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="model.html" title="model package"
+             >previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="index.html">ml-utils  documentation</a> &#187;</li>
+        <li class="nav-item nav-item-this"><a href="">plotting package</a></li> 
+      </ul>
     </div>
-
-    
-
-    
+    <div class="footer" role="contentinfo">
+        &#169; Copyright 2021, Filip Bronić.
+      Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 4.2.0.
+    </div>
   </body>
 </html>

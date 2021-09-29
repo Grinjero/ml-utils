@@ -1,4 +1,5 @@
 import numpy as np
+import pandas as pd
 
 
 def extract_exog_features(dataset, ex_features):
@@ -15,8 +16,11 @@ def step_by_step_forecast(model, endog, horizon_length, exog=None, only_predicte
 
     :param model: fitted statsmodel model e.g. SARIMAX
     :param endog: endog values for the forecast period, expected to be after the period on which the model was fitted
+    :type endog: pandas.Series
     :param exog: exog values for the forecast period, expected to be after the period on which the model was fitted
-    :param horizon_length:
+    :type exog: numpy.ndarray
+    :param horizon_length: length of the forecasting horizon
+    :type horizon_length: int
     :param only_predicted_mean: statsmodels get_prediction method returns various other information regarding the forecast,
         setting this to True returns only the forecast value
     :return: Step by step forecast over the given endog and exog sets,
