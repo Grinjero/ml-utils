@@ -18,9 +18,9 @@ def step_by_step_forecast(model, endog, horizon_length, exog=None, only_predicte
     :param exog: exog values for the forecast period, expected to be after the period on which the model was fitted
     :param horizon_length:
     :param only_predicted_mean: statsmodels get_prediction method returns various other information regarding the forecast,
-    setting this to True returns only the forecast value
+        setting this to True returns only the forecast value
     :return: Step by step forecast over the given endog and exog sets,
-    returns array in shape (len(endog) - horizon_length, horizon_length)
+        returns array in shape (len(endog) - horizon_length, horizon_length)
     """
     extended_model = model.extend(endog, exog)
 

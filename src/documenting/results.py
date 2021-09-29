@@ -9,7 +9,7 @@ class MultiModelStorer:
         """
         :param model_list: list of model classes to be stored
         :param model_kwargs_list: list of parameter dicts for each model given in model_list. Must be given in the same
-        order
+            order
         """
         self.model_list = model_list
         self.model_kwargs_list = model_kwargs_list

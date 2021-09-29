@@ -7,6 +7,16 @@ from model import forecasting_interface
 
 class SARIMAXWrapper(forecasting_interface.ForecastingModelInterface):
     def __init__(self, target_column, order, seasonal_order, exogenous_columns=None):
+        """
+        Wrapper for the statsmodels.tsa.statespace.sarimax.SARIMAX model so it can be more easily used alongside other
+        other methods
+
+        :param target_column: name of the column that is the targeted forecasted value
+        :param order: (p, d, q) of the SARIMAX model
+        :param seasonal_order: seasonal (P, D, Q, S) of the SARIMAX model; S is the seasonal length
+        :param exogenous_columns: columns that will be used as exogenous inputs for the model. If provided make sure that
+            the fit and eval function input DataFrames contain given columns.
+        """
         self.target_column = target_column
         self.exogenous_columns = exogenous_columns
 

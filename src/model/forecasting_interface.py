@@ -2,8 +2,8 @@ class ForecastingModelInterface:
     def fit(self, train_data_df):
         """
         Fit the model on the given data
+
         :param train_data_df:
-        :return:
         """
         pass
 
@@ -17,17 +17,16 @@ class ForecastingModelInterface:
 
     def forecast(self, forecast_point_index, horizon_length):
         """
-        Returns a forecast of length horizon_length for the given forecast_point_index
-        :param forecast_point_index:
-        :param horizon_length:
-        :return:
+        :param forecast_point_index: Starting point of the forecast
+        :param horizon_length: Length of the forecasting horizon
+        :return: list of horizon_length forecasted values starting from the given forecast_point_index
         """
         pass
 
     @property
     def name(self):
         """
-        :return: Name of the given model identified by some of its hyperparameters
+        :return: Name of the given model identified by some of its hyperparameters or a predetermined name
         """
         return self.__class__
 

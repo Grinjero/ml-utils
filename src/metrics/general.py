@@ -3,12 +3,13 @@ def calculate_metric_dict(predictions, true_values, metrics):
     Calculates each given metric for given predictions and their true values.
 
     Use case: in case of running multiple different experiments at the top of the file you can easily define your set of
-     metrics and easily store them. If at a later point you decide to change your metrics you need only change a single
-     dict
+    metrics and easily store them. If at a later point you decide to change your metrics you need only change a single
+    dict
+
     :param predictions:
     :param true_values:
-    :param metrics: dict with key-value pairs {metric name}-{metric func} that you want calculated.
-    Each metric func should receive parameters (predictions, true_values)
+    :param metrics: dict with key-value pairs `metric name`-`metric func` that you want calculated.
+        Each metric func should receive parameters (`predictions`, `true_values`)
     """
 
     metric_dict = {}

@@ -5,6 +5,19 @@ import numpy as np
 
 
 def animate_forecast(forecasts, true_values, date_offset, y_lim_mod=0.2, interval=300, ylims=None):
+    """
+    Produces an animation of given forecasts atop the original values.
+
+    :param forecasts:
+    :param true_values:
+    :param date_offset: date offset left and right to the currently shown forecast
+    :param y_lim_mod: percentage of the currently shown `y` amplitude to be added to each side of `ylim`
+    :param interval: interval between frames in miliseconds
+    :param ylims: Sets `ylim` during the whole animation. If set, ignores `y_lim_mod` and `ylim` is not auto adjusted
+        during the animation.
+    :return: the animation object that needs to be stored for the duration of the animation (or for however long you
+        need it to run)
+    """
     fig, ax = plt.subplots(figsize=(10, 5), constrained_layout=True)
     date_start = forecasts[0].index[0] - date_offset
     date_end = forecasts[0].index[-1] + date_offset

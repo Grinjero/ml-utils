@@ -57,7 +57,7 @@ class NaiveSeasonal(BaselineBase):
         :param forecast_point_index: index after which the forecasting will begin
         :param dynamic: True for true forecasts,
         :param index_or_label: False to use the integer index of the series, True to use actual index (For example datetime if
-        the series has a DateTimeIndex)
+            the series has a DateTimeIndex)
         :return: series containing the forecasts indexed by the same index of the original series
         """
 
@@ -110,7 +110,7 @@ class Naive(BaselineBase):
         :param forecast_point_index: index after which the forecasting will begin
         :param dynamic: True for true forecasts,
         :param index_or_label: False to use the integer index of the series, True to use actual index (For example datetime if
-        the series has a DateTimeIndex)
+            the series has a DateTimeIndex)
         :return: series containing the forecasts indexed by the same index of the original series
         """
 
@@ -134,7 +134,7 @@ class Naive(BaselineBase):
 class MovingAverage(BaselineBase):
     """
     Forecasted value is the moving average of a sliding window. For longer horizons (larger than window_size) the sliding
-     window calculates the moving average of previously calculated averages
+    window calculates the moving average of previously calculated averages
     """
     def __init__(self, window_size, whole_series: pd.Series=None, target_column=None):
         """
@@ -156,7 +156,7 @@ class MovingAverage(BaselineBase):
         :param forecast_point_index: index after which the forecasting will begin
         :param dynamic: True for true forecasts,
         :param index_or_label: False to use the integer index of the series, True to use actual index (For example datetime if
-        the series has a DateTimeIndex)
+            the series has a DateTimeIndex)
         :return: series containing the forecasts indexed by the same index of the original series
         """
 
@@ -200,7 +200,7 @@ class SeasonalMovingAverage(BaselineBase):
         :param forecast_point_index: index after which the forecasting will begin
         :param dynamic: True for true forecasts,
         :param index_or_label: False to use the integer index of the series, True to use actual index (For example datetime if
-        the series has a DateTimeIndex)
+            the series has a DateTimeIndex)
         :return: series containing the forecasts indexed by the same index of the original series
         """
 

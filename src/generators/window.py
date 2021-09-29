@@ -20,9 +20,9 @@ class WindowGenerator:
         :param feature_columns: columns to be used as input features, column names
         :param label_columns: columns to be used as target features, column names
         :param inverse_transformations: dict that transformations of certain features back to their original state
-        (mostly used to transform predictions back their real world representation).
-        Each value is a tuple(transformation_func, original feature name)
-        Function arguments are (data to be transformed, input features)
+            (mostly used to transform predictions back their real world representation).
+            Each value is a tuple(transformation_func, original feature name).
+            Function arguments are (data to be transformed, input features).
         """
 
         self.train_df = train_df
