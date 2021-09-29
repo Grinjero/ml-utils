@@ -39,3 +39,6 @@ Thumbs.db
 # Editor backup files #
 #######################
 *~
+
+# Override build exclusion
+!build

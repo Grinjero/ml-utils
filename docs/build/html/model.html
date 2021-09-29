@@ -1,0 +1,403 @@
+
+<!DOCTYPE html>
+
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+
+    <title>model package &#8212; ml-utils  documentation</title>
+    <link rel="stylesheet" type="text/css" href="_static/pygments.css" />
+    <link rel="stylesheet" type="text/css" href="_static/alabaster.css" />
+    <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js"></script>
+    <script src="_static/jquery.js"></script>
+    <script src="_static/underscore.js"></script>
+    <script src="_static/doctools.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+   
+  <link rel="stylesheet" href="_static/custom.css" type="text/css" />
+  
+  
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
+
+  </head><body>
+  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          
+
+          <div class="body" role="main">
+            
+  <section id="model-package">
+<h1>model package<a class="headerlink" href="#model-package" title="Permalink to this headline">¶</a></h1>
+<section id="submodules">
+<h2>Submodules<a class="headerlink" href="#submodules" title="Permalink to this headline">¶</a></h2>
+</section>
+<section id="module-model.forecasting_baselines">
+<span id="model-forecasting-baselines-module"></span><h2>model.forecasting_baselines module<a class="headerlink" href="#module-model.forecasting_baselines" title="Permalink to this headline">¶</a></h2>
+<dl class="py class">
+<dt class="sig sig-object py" id="model.forecasting_baselines.BaselineBase">
+<em class="property"><span class="pre">class</span> </em><span class="sig-prename descclassname"><span class="pre">model.forecasting_baselines.</span></span><span class="sig-name descname"><span class="pre">BaselineBase</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">whole_series</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">target_column</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#model.forecasting_baselines.BaselineBase" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#model.forecasting_interface.ForecastingModelInterface" title="model.forecasting_interface.ForecastingModelInterface"><code class="xref py py-class docutils literal notranslate"><span class="pre">model.forecasting_interface.ForecastingModelInterface</span></code></a></p>
+<dl class="py method">
+<dt class="sig sig-object py" id="model.forecasting_baselines.BaselineBase.eval">
+<span class="sig-name descname"><span class="pre">eval</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">test_data_df</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">horizon_length</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#model.forecasting_baselines.BaselineBase.eval" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>test_data_df</strong> – </p></li>
+<li><p><strong>horizon_length</strong> – </p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>list of forecasts for each forecast point in the given test_data_df. Each forecast is of length horizon_length</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="model.forecasting_baselines.BaselineBase.fit">
+<span class="sig-name descname"><span class="pre">fit</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">train_data</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#model.forecasting_baselines.BaselineBase.fit" title="Permalink to this definition">¶</a></dt>
+<dd><p>Fit the model on the given data</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>train_data_df</strong> – </p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="model.forecasting_baselines.BaselineBase.series">
+<em class="property"><span class="pre">property</span> </em><span class="sig-name descname"><span class="pre">series</span></span><a class="headerlink" href="#model.forecasting_baselines.BaselineBase.series" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="model.forecasting_baselines.MovingAverage">
+<em class="property"><span class="pre">class</span> </em><span class="sig-prename descclassname"><span class="pre">model.forecasting_baselines.</span></span><span class="sig-name descname"><span class="pre">MovingAverage</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">window_size</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">whole_series</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">Optional</span><span class="p"><span class="pre">[</span></span><span class="pre">pandas.core.series.Series</span><span class="p"><span class="pre">]</span></span></span> <span class="o"><span class="pre">=</span></span> <span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">target_column</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#model.forecasting_baselines.MovingAverage" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#model.forecasting_baselines.BaselineBase" title="model.forecasting_baselines.BaselineBase"><code class="xref py py-class docutils literal notranslate"><span class="pre">model.forecasting_baselines.BaselineBase</span></code></a></p>
+<p>Forecasted value is the moving average of a sliding window. For longer horizons (larger than window_size) the sliding
+window calculates the moving average of previously calculated averages</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="model.forecasting_baselines.MovingAverage.forecast">
+<span class="sig-name descname"><span class="pre">forecast</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">horizon_size</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">forecast_point_index</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dynamic</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">index_or_label</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#model.forecasting_baselines.MovingAverage.forecast" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>horizon_size</strong> – size of the forecasting horizon</p></li>
+<li><p><strong>forecast_point_index</strong> – index after which the forecasting will begin</p></li>
+<li><p><strong>dynamic</strong> – True for true forecasts,</p></li>
+<li><p><strong>index_or_label</strong> – False to use the integer index of the series, True to use actual index (For example datetime if
+the series has a DateTimeIndex)</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>series containing the forecasts indexed by the same index of the original series</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="model.forecasting_baselines.MovingAverage.name">
+<em class="property"><span class="pre">property</span> </em><span class="sig-name descname"><span class="pre">name</span></span><a class="headerlink" href="#model.forecasting_baselines.MovingAverage.name" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>Name of the given model identified by some of its hyperparameters or a predetermined name</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="model.forecasting_baselines.Naive">
+<em class="property"><span class="pre">class</span> </em><span class="sig-prename descclassname"><span class="pre">model.forecasting_baselines.</span></span><span class="sig-name descname"><span class="pre">Naive</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">whole_series</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">Optional</span><span class="p"><span class="pre">[</span></span><span class="pre">pandas.core.series.Series</span><span class="p"><span class="pre">]</span></span></span> <span class="o"><span class="pre">=</span></span> <span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">target_column</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#model.forecasting_baselines.Naive" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#model.forecasting_baselines.BaselineBase" title="model.forecasting_baselines.BaselineBase"><code class="xref py py-class docutils literal notranslate"><span class="pre">model.forecasting_baselines.BaselineBase</span></code></a></p>
+<p>Simply returns the last know value as the prediction for the whole horizon</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="model.forecasting_baselines.Naive.forecast">
+<span class="sig-name descname"><span class="pre">forecast</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">horizon_size</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">forecast_point_index</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dynamic</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">index_or_label</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#model.forecasting_baselines.Naive.forecast" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>horizon_size</strong> – size of the forecasting horizon</p></li>
+<li><p><strong>forecast_point_index</strong> – index after which the forecasting will begin</p></li>
+<li><p><strong>dynamic</strong> – True for true forecasts,</p></li>
+<li><p><strong>index_or_label</strong> – False to use the integer index of the series, True to use actual index (For example datetime if
+the series has a DateTimeIndex)</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>series containing the forecasts indexed by the same index of the original series</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="model.forecasting_baselines.Naive.name">
+<em class="property"><span class="pre">property</span> </em><span class="sig-name descname"><span class="pre">name</span></span><a class="headerlink" href="#model.forecasting_baselines.Naive.name" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>Name of the given model identified by some of its hyperparameters or a predetermined name</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="model.forecasting_baselines.NaiveSeasonal">
+<em class="property"><span class="pre">class</span> </em><span class="sig-prename descclassname"><span class="pre">model.forecasting_baselines.</span></span><span class="sig-name descname"><span class="pre">NaiveSeasonal</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">seasonal_period</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">whole_series</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">Optional</span><span class="p"><span class="pre">[</span></span><span class="pre">pandas.core.series.Series</span><span class="p"><span class="pre">]</span></span></span> <span class="o"><span class="pre">=</span></span> <span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">target_column</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#model.forecasting_baselines.NaiveSeasonal" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#model.forecasting_baselines.BaselineBase" title="model.forecasting_baselines.BaselineBase"><code class="xref py py-class docutils literal notranslate"><span class="pre">model.forecasting_baselines.BaselineBase</span></code></a></p>
+<p>Forecasted value is the value before seasonal_period of the currently forecasted index</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="model.forecasting_baselines.NaiveSeasonal.forecast">
+<span class="sig-name descname"><span class="pre">forecast</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">horizon_size</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">forecast_point_index</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dynamic</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">index_or_label</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#model.forecasting_baselines.NaiveSeasonal.forecast" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>horizon_size</strong> – size of the forecasting horizon</p></li>
+<li><p><strong>forecast_point_index</strong> – index after which the forecasting will begin</p></li>
+<li><p><strong>dynamic</strong> – True for true forecasts,</p></li>
+<li><p><strong>index_or_label</strong> – False to use the integer index of the series, True to use actual index (For example datetime if
+the series has a DateTimeIndex)</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>series containing the forecasts indexed by the same index of the original series</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="model.forecasting_baselines.NaiveSeasonal.name">
+<em class="property"><span class="pre">property</span> </em><span class="sig-name descname"><span class="pre">name</span></span><a class="headerlink" href="#model.forecasting_baselines.NaiveSeasonal.name" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>Name of the given model identified by some of its hyperparameters or a predetermined name</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="model.forecasting_baselines.SeasonalMovingAverage">
+<em class="property"><span class="pre">class</span> </em><span class="sig-prename descclassname"><span class="pre">model.forecasting_baselines.</span></span><span class="sig-name descname"><span class="pre">SeasonalMovingAverage</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">window_size</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">seasonal_period</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">whole_series</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">Optional</span><span class="p"><span class="pre">[</span></span><span class="pre">pandas.core.series.Series</span><span class="p"><span class="pre">]</span></span></span> <span class="o"><span class="pre">=</span></span> <span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">target_column</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#model.forecasting_baselines.SeasonalMovingAverage" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#model.forecasting_baselines.BaselineBase" title="model.forecasting_baselines.BaselineBase"><code class="xref py py-class docutils literal notranslate"><span class="pre">model.forecasting_baselines.BaselineBase</span></code></a></p>
+<dl class="py method">
+<dt class="sig sig-object py" id="model.forecasting_baselines.SeasonalMovingAverage.forecast">
+<span class="sig-name descname"><span class="pre">forecast</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">horizon_size</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">forecast_point_index</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dynamic</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">index_or_label</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#model.forecasting_baselines.SeasonalMovingAverage.forecast" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>horizon_size</strong> – size of the forecasting horizon</p></li>
+<li><p><strong>forecast_point_index</strong> – index after which the forecasting will begin</p></li>
+<li><p><strong>dynamic</strong> – True for true forecasts,</p></li>
+<li><p><strong>index_or_label</strong> – False to use the integer index of the series, True to use actual index (For example datetime if
+the series has a DateTimeIndex)</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>series containing the forecasts indexed by the same index of the original series</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="model.forecasting_baselines.SeasonalMovingAverage.name">
+<em class="property"><span class="pre">property</span> </em><span class="sig-name descname"><span class="pre">name</span></span><a class="headerlink" href="#model.forecasting_baselines.SeasonalMovingAverage.name" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>Name of the given model identified by some of its hyperparameters or a predetermined name</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+</section>
+<section id="module-model.forecasting_interface">
+<span id="model-forecasting-interface-module"></span><h2>model.forecasting_interface module<a class="headerlink" href="#module-model.forecasting_interface" title="Permalink to this headline">¶</a></h2>
+<dl class="py class">
+<dt class="sig sig-object py" id="model.forecasting_interface.ForecastingModelInterface">
+<em class="property"><span class="pre">class</span> </em><span class="sig-prename descclassname"><span class="pre">model.forecasting_interface.</span></span><span class="sig-name descname"><span class="pre">ForecastingModelInterface</span></span><a class="headerlink" href="#model.forecasting_interface.ForecastingModelInterface" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<dl class="py method">
+<dt class="sig sig-object py" id="model.forecasting_interface.ForecastingModelInterface.eval">
+<span class="sig-name descname"><span class="pre">eval</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">test_data_df</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">horizon_length</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#model.forecasting_interface.ForecastingModelInterface.eval" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>test_data_df</strong> – </p></li>
+<li><p><strong>horizon_length</strong> – </p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>list of forecasts for each forecast point in the given test_data_df. Each forecast is of length horizon_length</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="model.forecasting_interface.ForecastingModelInterface.fit">
+<span class="sig-name descname"><span class="pre">fit</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">train_data_df</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#model.forecasting_interface.ForecastingModelInterface.fit" title="Permalink to this definition">¶</a></dt>
+<dd><p>Fit the model on the given data</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>train_data_df</strong> – </p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="model.forecasting_interface.ForecastingModelInterface.forecast">
+<span class="sig-name descname"><span class="pre">forecast</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">forecast_point_index</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">horizon_length</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#model.forecasting_interface.ForecastingModelInterface.forecast" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>forecast_point_index</strong> – Starting point of the forecast</p></li>
+<li><p><strong>horizon_length</strong> – Length of the forecasting horizon</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>list of horizon_length forecasted values starting from the given forecast_point_index</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="model.forecasting_interface.ForecastingModelInterface.name">
+<em class="property"><span class="pre">property</span> </em><span class="sig-name descname"><span class="pre">name</span></span><a class="headerlink" href="#model.forecasting_interface.ForecastingModelInterface.name" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>Name of the given model identified by some of its hyperparameters or a predetermined name</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+</section>
+<section id="module-model.sarimax_wrapper">
+<span id="model-sarimax-wrapper-module"></span><h2>model.sarimax_wrapper module<a class="headerlink" href="#module-model.sarimax_wrapper" title="Permalink to this headline">¶</a></h2>
+<dl class="py class">
+<dt class="sig sig-object py" id="model.sarimax_wrapper.SARIMAXWrapper">
+<em class="property"><span class="pre">class</span> </em><span class="sig-prename descclassname"><span class="pre">model.sarimax_wrapper.</span></span><span class="sig-name descname"><span class="pre">SARIMAXWrapper</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">target_column</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">order</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">seasonal_order</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">exogenous_columns</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#model.sarimax_wrapper.SARIMAXWrapper" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#model.forecasting_interface.ForecastingModelInterface" title="model.forecasting_interface.ForecastingModelInterface"><code class="xref py py-class docutils literal notranslate"><span class="pre">model.forecasting_interface.ForecastingModelInterface</span></code></a></p>
+<dl class="py method">
+<dt class="sig sig-object py" id="model.sarimax_wrapper.SARIMAXWrapper.eval">
+<span class="sig-name descname"><span class="pre">eval</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">test_df</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">horizon_length</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#model.sarimax_wrapper.SARIMAXWrapper.eval" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>test_data_df</strong> – </p></li>
+<li><p><strong>horizon_length</strong> – </p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>list of forecasts for each forecast point in the given test_data_df. Each forecast is of length horizon_length</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="model.sarimax_wrapper.SARIMAXWrapper.fit">
+<span class="sig-name descname"><span class="pre">fit</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">train_df</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#model.sarimax_wrapper.SARIMAXWrapper.fit" title="Permalink to this definition">¶</a></dt>
+<dd><p>Fit the model on the given data</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>train_data_df</strong> – </p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="model.sarimax_wrapper.SARIMAXWrapper.name">
+<em class="property"><span class="pre">property</span> </em><span class="sig-name descname"><span class="pre">name</span></span><a class="headerlink" href="#model.sarimax_wrapper.SARIMAXWrapper.name" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>Name of the given model identified by some of its hyperparameters or a predetermined name</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+</section>
+<section id="module-model.test">
+<span id="model-test-module"></span><h2>model.test module<a class="headerlink" href="#module-model.test" title="Permalink to this headline">¶</a></h2>
+</section>
+<section id="module-model">
+<span id="module-contents"></span><h2>Module contents<a class="headerlink" href="#module-model" title="Permalink to this headline">¶</a></h2>
+</section>
+</section>
+
+
+          </div>
+          
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+<h1 class="logo"><a href="index.html">ml-utils</a></h1>
+
+
+
+
+
+
+
+
+<h3>Navigation</h3>
+
+<div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="index.html">Documentation overview</a><ul>
+  </ul></li>
+</ul>
+</div>
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false"/>
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script>$('#searchbox').show(0);</script>
+
+
+
+
+
+
+
+
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="footer">
+      &copy;2021, Filip Bronić.
+      
+      |
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 4.2.0</a>
+      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.12</a>
+      
+      |
+      <a href="_sources/model.rst.txt"
+          rel="nofollow">Page source</a>
+    </div>
+
+    
+
+    
+  </body>
+</html>
