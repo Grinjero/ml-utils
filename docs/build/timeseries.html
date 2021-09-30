@@ -8,37 +8,28 @@
 
     <title>timeseries package &#8212; ml-utils  documentation</title>
     <link rel="stylesheet" type="text/css" href="_static/pygments.css" />
-    <link rel="stylesheet" type="text/css" href="_static/classic.css" />
-    
+    <link rel="stylesheet" type="text/css" href="_static/alabaster.css" />
     <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js"></script>
     <script src="_static/jquery.js"></script>
     <script src="_static/underscore.js"></script>
     <script src="_static/doctools.js"></script>
-    
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
-    <link rel="prev" title="plotting package" href="plotting.html" /> 
+    <link rel="prev" title="plotting package" href="plotting.html" />
+   
+  <link rel="stylesheet" href="_static/custom.css" type="text/css" />
+  
+  
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
+
   </head><body>
-    <div class="related" role="navigation" aria-label="related navigation">
-      <h3>Navigation</h3>
-      <ul>
-        <li class="right" style="margin-right: 10px">
-          <a href="genindex.html" title="General Index"
-             accesskey="I">index</a></li>
-        <li class="right" >
-          <a href="py-modindex.html" title="Python Module Index"
-             >modules</a> |</li>
-        <li class="right" >
-          <a href="plotting.html" title="plotting package"
-             accesskey="P">previous</a> |</li>
-        <li class="nav-item nav-item-0"><a href="index.html">ml-utils  documentation</a> &#187;</li>
-        <li class="nav-item nav-item-this"><a href="">timeseries package</a></li> 
-      </ul>
-    </div>  
+  
 
     <div class="document">
       <div class="documentwrapper">
         <div class="bodywrapper">
+          
+
           <div class="body" role="main">
             
   <section id="timeseries-package">
@@ -51,12 +42,20 @@
 <dl class="py function">
 <dt class="sig sig-object py" id="timeseries.processing.element_checker">
 <span class="sig-prename descclassname"><span class="pre">timeseries.processing.</span></span><span class="sig-name descname"><span class="pre">element_checker</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">value</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">check_nan</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">check_inf</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">check_values</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#timeseries.processing.element_checker" title="Permalink to this definition">¶</a></dt>
-<dd><p>Check if the given value or np.ndarray satisfies any of the given criteria
-:param value: value that is checked against following criteria
-:param check_inf:
-:param check_nan:
-:param check_values: checks if the number is in the given list of numbers or is equal to the given number
-:return: True if satisfies any</p>
+<dd><p>Check if the given value or np.ndarray satisfies any of the given criteria</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>value</strong> – value that is checked against following criteria</p></li>
+<li><p><strong>check_inf</strong> – </p></li>
+<li><p><strong>check_nan</strong> – </p></li>
+<li><p><strong>check_values</strong> – checks if the number is in the given list of numbers or is equal to the given number</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>True if satisfies any</p>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="py function">
@@ -91,14 +90,22 @@
 <dt class="sig sig-object py" id="timeseries.splitting.split_by_holes">
 <span class="sig-prename descclassname"><span class="pre">timeseries.splitting.</span></span><span class="sig-name descname"><span class="pre">split_by_holes</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">series</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">min_hole_size</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">min_segment_size</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">is_nan_hole</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">is_inf_hole</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">hole_values</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">[]</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#timeseries.splitting.split_by_holes" title="Permalink to this definition">¶</a></dt>
 <dd><p>Splits the input pd.DataFrame or pd.Series into segments larger than min_segment_size separated by at least
-min_hole_size hole_elements
-:param series:
-:param min_hole_size:
-:param min_segment_size: minimal number of non hole elements in the segment
-:param hole_elements: elements that will be considered as a “hole” in the dataset
-:return: returns a list of index pairs (index_segment_start, index_segment_end) for each segment. Element at
-index_segment_end is included in the segment. Original index values of the series are returned so please use .loc
-with the results</p>
+min_hole_size hole_elements</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>series</strong> – </p></li>
+<li><p><strong>min_hole_size</strong> – </p></li>
+<li><p><strong>min_segment_size</strong> – minimal number of non hole elements in the segment</p></li>
+<li><p><strong>hole_elements</strong> – elements that will be considered as a “hole” in the dataset</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>returns a list of index pairs (index_segment_start, index_segment_end) for each segment. Element at
+index_segment_end is included in the segment. Original index values of the series are returned so please use
+.loc with the results</p>
+</dd>
+</dl>
 </dd></dl>
 
 </section>
@@ -108,66 +115,64 @@ with the results</p>
 </section>
 
 
-            <div class="clearer"></div>
           </div>
+          
         </div>
       </div>
       <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
         <div class="sphinxsidebarwrapper">
-  <h3><a href="index.html">Table of Contents</a></h3>
-  <ul>
-<li><a class="reference internal" href="#">timeseries package</a><ul>
-<li><a class="reference internal" href="#submodules">Submodules</a></li>
-<li><a class="reference internal" href="#module-timeseries.processing">timeseries.processing module</a></li>
-<li><a class="reference internal" href="#module-timeseries.splitting">timeseries.splitting module</a></li>
-<li><a class="reference internal" href="#module-timeseries">Module contents</a></li>
+<h1 class="logo"><a href="index.html">ml-utils</a></h1>
+
+
+
+
+
+
+
+
+<h3>Navigation</h3>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="documenting.html">documenting package</a></li>
+<li class="toctree-l1"><a class="reference internal" href="evaluation.html">evaluation package</a></li>
+<li class="toctree-l1"><a class="reference internal" href="generators.html">generators package</a></li>
+<li class="toctree-l1"><a class="reference internal" href="metrics.html">metrics package</a></li>
+<li class="toctree-l1"><a class="reference internal" href="model.html">model package</a></li>
+<li class="toctree-l1"><a class="reference internal" href="plotting.html">plotting package</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">timeseries package</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#submodules">Submodules</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#module-timeseries.processing">timeseries.processing module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#module-timeseries.splitting">timeseries.splitting module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#module-timeseries">Module contents</a></li>
 </ul>
 </li>
 </ul>
 
-  <h4>Previous topic</h4>
-  <p class="topless"><a href="plotting.html"
-                        title="previous chapter">plotting package</a></p>
-  <div role="note" aria-label="source link">
-    <h3>This Page</h3>
-    <ul class="this-page-menu">
-      <li><a href="_sources/timeseries.rst.txt"
-            rel="nofollow">Show Source</a></li>
-    </ul>
-   </div>
-<div id="searchbox" style="display: none" role="search">
-  <h3 id="searchlabel">Quick search</h3>
-    <div class="searchformwrapper">
-    <form class="search" action="search.html" method="get">
-      <input type="text" name="q" aria-labelledby="searchlabel" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false"/>
-      <input type="submit" value="Go" />
-    </form>
-    </div>
+<div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="index.html">Documentation overview</a><ul>
+      <li>Previous: <a href="plotting.html" title="previous chapter">plotting package</a></li>
+  </ul></li>
+</ul>
 </div>
-<script>$('#searchbox').show(0);</script>
         </div>
       </div>
       <div class="clearer"></div>
     </div>
-    <div class="related" role="navigation" aria-label="related navigation">
-      <h3>Navigation</h3>
-      <ul>
-        <li class="right" style="margin-right: 10px">
-          <a href="genindex.html" title="General Index"
-             >index</a></li>
-        <li class="right" >
-          <a href="py-modindex.html" title="Python Module Index"
-             >modules</a> |</li>
-        <li class="right" >
-          <a href="plotting.html" title="plotting package"
-             >previous</a> |</li>
-        <li class="nav-item nav-item-0"><a href="index.html">ml-utils  documentation</a> &#187;</li>
-        <li class="nav-item nav-item-this"><a href="">timeseries package</a></li> 
-      </ul>
+    <div class="footer">
+      &copy;2021, Filip Bronić.
+      
+      |
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 4.2.0</a>
+      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.12</a>
+      
+      |
+      <a href="_sources/timeseries.rst.txt"
+          rel="nofollow">Page source</a>
     </div>
-    <div class="footer" role="contentinfo">
-        &#169; Copyright 2021, Filip Bronić.
-      Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 4.2.0.
-    </div>
+
+    
+
+    
   </body>
 </html>

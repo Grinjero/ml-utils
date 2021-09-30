@@ -8,13 +8,14 @@ def split_by_holes(series, min_hole_size, min_segment_size, is_nan_hole=True, is
     """
     Splits the input pd.DataFrame or pd.Series into segments larger than min_segment_size separated by at least
     min_hole_size hole_elements
+
     :param series:
     :param min_hole_size:
     :param min_segment_size: minimal number of non hole elements in the segment
     :param hole_elements: elements that will be considered as a "hole" in the dataset
     :return: returns a list of index pairs (index_segment_start, index_segment_end) for each segment. Element at
-    index_segment_end is included in the segment. Original index values of the series are returned so please use .loc
-    with the results
+        index_segment_end is included in the segment. Original index values of the series are returned so please use
+        .loc with the results
     """
     assert min_hole_size > 0 and min_segment_size > 0, "Minimum hole and segment size must be greater than 0"
 

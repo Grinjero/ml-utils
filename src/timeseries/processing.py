@@ -5,6 +5,7 @@ import numpy as np
 def element_checker(value, check_nan, check_inf, check_values=None):
     """
     Check if the given value or np.ndarray satisfies any of the given criteria
+
     :param value: value that is checked against following criteria
     :param check_inf:
     :param check_nan:
