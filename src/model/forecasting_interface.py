@@ -1,4 +1,12 @@
-class ForecastingModelInterface:
+import uuid
+
+import model.model_interface
+
+
+class ForecastingModelInterface(model.model_interface.Model):
+    def __init__(self):
+        super().__init__()
+
     def fit(self, train_data_df):
         """
         Fit the model on the given data
@@ -22,13 +30,3 @@ class ForecastingModelInterface:
         :return: list of horizon_length forecasted values starting from the given forecast_point_index
         """
         pass
-
-    @property
-    def name(self):
-        """
-        :return: Name of the given model identified by some of its hyperparameters or a predetermined name
-        """
-        return self.__class__
-
-    def __str__(self):
-        return self.name

@@ -17,6 +17,8 @@ class SARIMAXWrapper(forecasting_interface.ForecastingModelInterface):
         :param exogenous_columns: columns that will be used as exogenous inputs for the model. If provided make sure that
             the fit and eval function input DataFrames contain given columns.
         """
+        super().__init__()
+
         self.target_column = target_column
         self.exogenous_columns = exogenous_columns
 
@@ -27,14 +29,23 @@ class SARIMAXWrapper(forecasting_interface.ForecastingModelInterface):
 
     def fit(self, train_df):
         exogenous = extract_exog_features(train_df, self.exogenous_columns)
-        model = SARIMAX(train_df[self.target_column], exog=exogenous, order=self.order, seasonal_order=self.seasonal_order)
+        model = SARIMAX(train_df[self.target_column], exog=exogenous, order=self.order,
+                        seasonal_order=self.seasonal_order)
         model_fit = model.fit()
 
         self.model = model_fit
 
     @property
     def name(self):
-        return f"SARIMAX_({self.order[0]},{self.order[1]},{self.order[2]})_({self.seasonal_order[0]},{self.seasonal_order[1]},{self.seasonal_order[2]})x{self.seasonal_order[3]}"
+        return "SARIMAX"
+
+    def hyperparameters(self):
+        return {
+            "target": self.target_column,
+            "exogenous": self.exogenous_columns,
+            "order": self.order,
+            "seasonal_order": self.seasonal_order
+        }
 
     def eval(self, test_df, horizon_length):
         exogenous = extract_exog_features(test_df, self.exogenous_columns)

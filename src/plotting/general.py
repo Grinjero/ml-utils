@@ -48,8 +48,8 @@ def plot_twin_y_axes(series_1, series_2, label1, label2, color1, color2, ax=None
     return ax
 
 
-def plot_correlation_matrix(df, figsize=None):
-    corr = df.corr()
+def plot_correlation_matrix(df: pd.DataFrame, corr_fun='pearson', figsize=None):
+    corr = df.corr(method=corr_fun)
     # mask = np.triu(np.ones_like(corr, dtype=bool))
 
     # Set up the matplotlib figure

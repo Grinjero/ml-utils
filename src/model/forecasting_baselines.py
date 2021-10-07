@@ -6,6 +6,8 @@ from model import forecasting_interface
 
 class BaselineBase(forecasting_interface.ForecastingModelInterface):
     def __init__(self, whole_series, target_column):
+        super().__init__()
+
         self._series = whole_series
         self.target_column = target_column
 
@@ -36,16 +38,24 @@ class NaiveSeasonal(BaselineBase):
     """
     Forecasted value is the value before seasonal_period of the currently forecasted index
     """
-    def __init__(self, seasonal_period, whole_series: pd.Series=None, target_column=None):
+
+    def __init__(self, seasonal_period, whole_series: pd.Series = None, target_column=None):
         """
         :param whole_series: no worries, the model doesn't peek into the future
         :param seasonal_period:
         :param target_column: if given, whole_series is treated as a dataframe
         """
         super().__init__(whole_series, target_column)
+
         assert seasonal_period > 1, "Seasonal period must be greater than 1"
 
         self.seasonal_period = seasonal_period
+
+    def hyperparameters(self):
+        return {
+            "seasonal_period": self.seasonal_period,
+            "target_column": self.target_column
+        }
 
     @property
     def name(self):
@@ -92,17 +102,15 @@ class Naive(BaselineBase):
     Simply returns the last know value as the prediction for the whole horizon
     """
 
-    def __init__(self, whole_series: pd.Series=None, target_column=None):
+    def __init__(self, whole_series: pd.Series = None, target_column=None):
         """
         :param whole_series: no worries, the model doesn't peek into the future
         """
         super().__init__(whole_series, target_column)
 
-
     @property
     def name(self):
         return "Naive"
-
 
     def forecast(self, horizon_size, forecast_point_index, dynamic=True, index_or_label=False):
         """
@@ -136,7 +144,8 @@ class MovingAverage(BaselineBase):
     Forecasted value is the moving average of a sliding window. For longer horizons (larger than window_size) the sliding
     window calculates the moving average of previously calculated averages
     """
-    def __init__(self, window_size, whole_series: pd.Series=None, target_column=None):
+
+    def __init__(self, window_size, whole_series: pd.Series = None, target_column=None):
         """
         :param whole_series: no worries, the model doesn't peek into the future
         :param window_size: size of the moving average window
@@ -145,6 +154,11 @@ class MovingAverage(BaselineBase):
         assert window_size > 1, "Sliding window size must be greater than 1"
 
         self.window_size = window_size
+
+    def hyperparameters(self):
+        return {
+            "window_size": self.window_size
+        }
 
     @property
     def name(self):
@@ -168,7 +182,8 @@ class MovingAverage(BaselineBase):
         assert forecast_point_index > self.window_size, "Forecast point index must be greater than the window size"
 
         mas = np.zeros(horizon_size + self.window_size)
-        mas[:self.window_size] = self.series.iloc[forecast_point_index - self.window_size + 1:forecast_point_index + 1].values
+        mas[:self.window_size] = self.series.iloc[
+                                 forecast_point_index - self.window_size + 1:forecast_point_index + 1].values
 
         mas_index = self.window_size
         for i in range(1, horizon_size + 1):
@@ -185,10 +200,16 @@ class MovingAverage(BaselineBase):
 
 
 class SeasonalMovingAverage(BaselineBase):
-    def __init__(self, window_size, seasonal_period, whole_series: pd.Series=None, target_column=None):
+    def __init__(self, window_size, seasonal_period, whole_series: pd.Series = None, target_column=None):
         super().__init__(whole_series, target_column)
         self.window_size = window_size
         self.seasonal_period = seasonal_period
+
+    def hyperparameters(self):
+        return {
+            "window_size": self.window_size,
+            "seasonal_period": self.seasonal_period
+        }
 
     @property
     def name(self):
@@ -212,12 +233,14 @@ class SeasonalMovingAverage(BaselineBase):
         assert forecast_point_index > self.window_size * self.seasonal_period, "Forecast point index must be greater than the window size * seasonal period"
 
         mas = np.zeros(horizon_size + self.window_size * self.seasonal_period)
-        mas[:self.window_size * self.seasonal_period] = self.series.iloc[forecast_point_index - self.window_size * self.seasonal_period + 1:forecast_point_index + 1].values
+        mas[:self.window_size * self.seasonal_period] = self.series.iloc[
+                                                        forecast_point_index - self.window_size * self.seasonal_period + 1:forecast_point_index + 1].values
 
         mas_index = self.window_size * self.seasonal_period
         for i in range(1, horizon_size + 1):
             forecasted_index = self.series.index[forecast_point_index + i]
-            mas[mas_index] = np.mean(mas[mas_index - self.window_size * self.seasonal_period: mas_index: self.seasonal_period])
+            mas[mas_index] = np.mean(
+                mas[mas_index - self.window_size * self.seasonal_period: mas_index: self.seasonal_period])
 
             forecasted_value = mas[mas_index]
 
@@ -227,6 +250,7 @@ class SeasonalMovingAverage(BaselineBase):
             mas_index += 1
 
         return pd.Series(data=forecasted_values, index=forecasted_indices)
+
 
 if __name__ == "__main__":
     series = pd.Series([0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18])
