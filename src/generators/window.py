@@ -4,6 +4,7 @@ import numpy as np
 import matplotlib.pyplot as plt
 import matplotlib.dates as mdates
 import pandas as pd
+import tensorflow as tf
 
 
 class WindowGenerator:
@@ -83,22 +84,22 @@ class WindowGenerator:
         else:
             return np.arange(starting_position, starting_position + self.total_window_size, self.sequence_stride)
 
-    # def make_dataset(self, data):
-    #     features = np.array(data[self.feature_column_names], dtype=np.float32)
-    #     targets = np.array(data[self.label_column_names], dtype=np.float32)
-    #
-    #     assert len(features) == len(targets)
-    #
-    #     start_positions = np.arange(start=0, stop=len(features) - self.total_window_size, step=self.sequence_stride)
-    #     slices = [np.arange(start_position, start_position + self.total_window_size)
-    #               for start_position in start_positions]
-    #     input_indices = [sample_slice[self.input_slice] for sample_slice in slices]
-    #     label_indices = [sample_slice[self.labels_slice] for sample_slice in slices]
-    #
-    #     inputs = features[input_indices, :]
-    #     labels = targets[label_indices, :]
-    #
-    #     return tf.data.Dataset.from_tensor_slices((inputs, labels))
+    def make_dataset(self, data):
+        features = np.array(data[self.feature_column_names], dtype=np.float32)
+        targets = np.array(data[self.label_column_names], dtype=np.float32)
+
+        assert len(features) == len(targets)
+
+        start_positions = np.arange(start=0, stop=len(features) - self.total_window_size, step=self.sequence_stride)
+        slices = [np.arange(start_position, start_position + self.total_window_size)
+                  for start_position in start_positions]
+        input_indices = [sample_slice[self.input_slice] for sample_slice in slices]
+        label_indices = [sample_slice[self.labels_slice] for sample_slice in slices]
+
+        inputs = features[input_indices, :]
+        labels = targets[label_indices, :]
+
+        return tf.data.Dataset.from_tensor_slices((inputs, labels))
 
     @property
     def input_shape(self):

@@ -18,7 +18,7 @@ def series_weights_by_mean(df: pd.DataFrame, weight_column, series_keys):
     """
     groups = df.groupby(series_keys)
     ngroups = groups.ngroups
-    return groups.apply(lambda gr: 1 / ngroups)
+    return groups[weight_column].apply(lambda gr: 1 / ngroups)
 
 def series_weights_by_total(df: pd.DataFrame, weight_column, series_keys):
     """
@@ -62,7 +62,3 @@ def weighted_metric(series_metrics_df, weights, series_keys, metric_columns, new
 
     weighted_metrics.index = pd.Index(new_index_names, name="metric")
     return weighted_metrics
-
-#
-# def series_range_percentage_weights(series):
-#
