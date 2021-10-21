@@ -1,6 +1,6 @@
 import matplotlib.animation as animation
 import matplotlib.pyplot as plt
-
+import seaborn as sns
 import numpy as np
 
 
@@ -53,3 +53,67 @@ def animate_forecast(forecasts, true_values, date_offset, y_lim_mod=0.2, interva
 
     ani = animation.FuncAnimation(fig, animate, interval=interval, frames=len(forecasts), blit=False)
     return ani
+
+
+def plot_forecasts_at_step(forecasts, true_values, forecast_step):
+    """
+    :param forecasts:
+    :param true_values:
+    :type: true_values: pd.Series
+    :param forecast_step:
+    :return:
+    """
+    if isinstance(forecasts, np.ndarray) is False:
+        forecasts = np.asarray(forecasts)
+
+    indices = slice(forecast_step, forecasts.shape[0] + forecast_step)
+    forecasts_at_step = forecasts[:, forecast_step]
+
+    plt.plot(true_values.iloc[indices].index, true_values.iloc[indices], label=f"True values", alpha=0.7)
+    plt.plot(true_values.iloc[indices].index, forecasts_at_step, label=f"Forecast at step {forecast_step}", alpha=0.7)
+
+
+def plot_horizon_step_metric(horizon_step_metrics, metric_name):
+    plt.grid(True)
+    plt.plot(np.arange(1, len(horizon_step_metrics) + 1, dtype=np.int), horizon_step_metrics, label=metric_name)
+    plt.xlim(1, len(horizon_step_metrics) + 1)
+
+
+def plot_forecasts_scatterplot_at_step(forecasts, true_values, forecast_step):
+    """
+
+    :param forecasts:
+    :type forecasts: array_like of shape (n_forecasts, horizon_size)
+    :param true_values:
+    :param forecast_step:
+    :return:
+    """
+
+    if isinstance(true_values, np.ndarray) is False:
+        true_values = np.asarray(true_values)
+
+    if isinstance(forecasts, np.ndarray) is False:
+        forecasts = np.asarray(forecasts)
+
+    horizon_size = forecasts.shape[1]
+
+    true_values_ahead = true_values[forecast_step:-(horizon_size - forecasts.shape)]
+    step_ahead_forecasts = forecasts[:, forecast_step]
+
+    fig, ax = plt.subplots()
+    # ax.scatter(x=true_values_ahead, y=step_ahead_forecasts)
+    sns.regplot(x=true_values_ahead, y=step_ahead_forecasts, ax=ax)
+    plt.ylabel(f"{forecast_step} step ahead forecast")
+    plt.xlabel("True")
+
+    lims = [
+        np.min([ax.get_xlim(), ax.get_ylim()]),  # min of both axes
+        np.max([ax.get_xlim(), ax.get_ylim()]),  # max of both axes
+    ]
+
+    ax.plot(lims, lims, 'k-', alpha=0.75, zorder=0)
+    ax.set_aspect('equal')
+    ax.set_xlim(lims)
+    ax.set_ylim(lims)
+
+

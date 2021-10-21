@@ -16,21 +16,31 @@ def step_forecast_metrics(forecasts, true_values, metric):
 
     horizon_length = forecasts.shape[1]
     step_metrics = []
+    step_index = []
     if true_values.ndim == 2:
         for forecast_point_index in range(0, forecasts.shape[0]):
+            if np.logical_or.reduce(true_values[forecast_point_index, :].isna()):
+                continue
+
             forecast_metric = metric(forecasts[forecast_point_index, :],
                                      true_values[forecast_point_index, :])
             step_metrics.append(forecast_metric)
 
     elif true_values.ndim == 1:
         for forecast_point_index in range(0, forecasts.shape[0]):
-            forecast_metric = metric(forecasts[forecast_point_index, :],
-                                     true_values[forecast_point_index:forecast_point_index + horizon_length])
+            # if np.logical_or.reduce(true_values[forecast_point_index:forecast_point_index + horizon_length].isna()):
+            #     continue
+            if np.isnan(true_values[forecast_point_index:forecast_point_index + horizon_length]).sum() >= 1 or np.isnan(forecasts[forecast_point_index, :]).sum() >= 1:
+                 continue
+            forecast_metric = metric(true_values[forecast_point_index:forecast_point_index + horizon_length], forecasts[forecast_point_index, :])
             step_metrics.append(forecast_metric)
+            step_index.append(true_values.index[forecast_point_index])
 
     else:
         raise ValueError("Illegal forecasts or true value array shapes")
 
+    if len(step_index) != 0:
+        return pd.Series(index=step_index, data=step_metrics)
     return np.array(step_metrics)
 
 
@@ -53,6 +63,11 @@ def horizon_metric(sample_predictions, y_true, metric_func):
     for horizon_step in range(horizon_size):
         predicted_horizon_steps = sample_predictions[:, horizon_step]
         true_horizon_steps = y_true[horizon_step:len(y_true) - (horizon_size - horizon_step)]
+
+        nan_mask = np.isnan(true_horizon_steps)
+        if nan_mask.sum() > 0:
+            true_horizon_steps = np.extract(-nan_mask, true_horizon_steps)
+            predicted_horizon_steps = np.extract(-nan_mask, predicted_horizon_steps)
 
         metric = metric_func(predicted_horizon_steps, true_horizon_steps)
         horizon_metrics.append(metric)

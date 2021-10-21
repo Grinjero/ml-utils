@@ -26,10 +26,15 @@ def step_by_step_forecast(model, endog, horizon_length, exog=None, only_predicte
     :return: Step by step forecast over the given endog and exog sets,
         returns array in shape (len(endog) - horizon_length, horizon_length)
     """
-    extended_model = model.extend(endog, exog)
+
+    forecasting_start_index = 0
+    try:
+        extended_model = model.extend(endog, exog)
+    except ValueError as e:
+        raise ValueError("Model can't be extended " + str(e))
 
     forecasts = []
-    for i in range(len(endog) - horizon_length):
+    for i in range(forecasting_start_index, len(endog) - horizon_length):
         sample_forecast = extended_model.get_prediction(start=endog.index[i], end=endog.index[i + horizon_length - 1],
                                                         dynamic=endog.index[i], exog=exog)
 

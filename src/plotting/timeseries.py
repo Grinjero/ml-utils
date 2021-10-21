@@ -15,7 +15,7 @@ def plot_series_segments(series, index_pairs):
         segment.plot()
 
 
-def plot_seasonal_decompose(decompose: seasonal.DecomposeResult, figsize=(20, 12), period_name=None):
+def plot_seasonal_decompose(observed, seasonal, trend, resid, figsize=(20, 12), period_name=None):
     """
     Plotting of a seasonal decomposition on 4 axes, one for each component. Components are plotted in the order: observed,
     seasonal, trend and residuals. plt.show() still needs to be called after this function.
@@ -27,16 +27,16 @@ def plot_seasonal_decompose(decompose: seasonal.DecomposeResult, figsize=(20, 12
     """
     fig, (ax0, ax1, ax2, ax3) = plt.subplots(4, 1, figsize=figsize)
 
-    ax0.plot(decompose.observed)
+    ax0.plot(observed)
     ax0.set_ylabel("Observed")
 
-    ax1.plot(decompose.seasonal)
+    ax1.plot(seasonal)
     ax1.set_ylabel(f"{period_name} seasonal")
 
-    ax2.plot(decompose.trend)
+    ax2.plot(trend)
     ax2.set_ylabel(f"{period_name} trend")
 
-    ax3.plot(decompose.resid)
+    ax3.plot(resid)
     ax3.set_ylabel(f"{period_name} residuals")
 
     return ax0, ax1, ax2, ax3
