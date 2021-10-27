@@ -74,7 +74,7 @@ def is_working_day(date_column):
     croatia_holidays = holidays.HR()
 
     def check_element_working(date):
-        weekday = date.weekday
+        weekday = date.weekday()
         return not ((weekday in [5, 6]) or (date in croatia_holidays))
 
     return date_column.map(check_element_working)

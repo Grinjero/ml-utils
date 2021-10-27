@@ -2,7 +2,11 @@ import numpy as np
 import pandas as pd
 
 
-def step_forecast_metrics(forecasts, true_values, metric):
+def smape(A, F):
+    return 100/len(A) * np.sum(2 * np.abs(F - A) / (np.abs(A) + np.abs(F)))
+
+
+def step_forecast_metrics(forecasts, true_values, metric, dropna=False):
     """
     :param forecasts: array like of shape (n_forecast_points, horizon_length)
     :param true_values: array like of shape (n_forecast_points + horizon_length) or same shape as :forecasts
@@ -62,7 +66,7 @@ def horizon_metric(sample_predictions, y_true, metric_func, dropna=False):
     horizon_size = input_shape[1]
     horizon_metrics = []
 
-    if dropna:
+    if dropna is True:
         nan_mask_true = np.isnan(y_true)
         nan_mask_forecast = np.isnan(sample_predictions)
         if (nan_mask_true.sum() > 0) or (nan_mask_forecast.sum() > 0):
@@ -74,8 +78,6 @@ def horizon_metric(sample_predictions, y_true, metric_func, dropna=False):
                 sample_forecast_mask = np.logical_or(nan_mask_forecast[forecast_slice], nan_mask_true[true_slice])
 
                 nan_mask_forecast[forecast_slice] = sample_forecast_mask
-                print(sample_forecast_mask.shape)
-                print(nan_mask_true[true_slice].shape)
                 nan_mask_true[true_slice] = sample_forecast_mask.flatten()
 
             y_true = np.ma.masked_array(y_true, mask=nan_mask_true)
@@ -90,7 +92,10 @@ def horizon_metric(sample_predictions, y_true, metric_func, dropna=False):
         # if (nan_mask.sum() > 0) or (nan_mask_forecast.sum() > 0):
         #     true_horizon_steps = np.extract(-nan_mask, true_horizon_steps)
         #     predicted_horizon_steps = np.extract(-nan_mask, predicted_horizon_steps)
-
+        
+        if dropna is True:
+            predicted_horizon_steps = predicted_horizon_steps.compressed()
+            true_horizon_steps = true_horizon_steps.compressed()
         metric = metric_func(predicted_horizon_steps, true_horizon_steps)
         horizon_metrics.append(metric)
 
