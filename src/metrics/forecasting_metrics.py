@@ -22,8 +22,7 @@ def step_forecast_metrics(forecasts, true_values, metric):
             if np.logical_or.reduce(true_values[forecast_point_index, :].isna()):
                 continue
 
-            forecast_metric = metric(forecasts[forecast_point_index, :],
-                                     true_values[forecast_point_index, :])
+            forecast_metric = metric(true_values[forecast_point_index, :], forecasts[forecast_point_index, :])
             step_metrics.append(forecast_metric)
 
     elif true_values.ndim == 1:
@@ -32,6 +31,7 @@ def step_forecast_metrics(forecasts, true_values, metric):
             #     continue
             if np.isnan(true_values[forecast_point_index:forecast_point_index + horizon_length]).sum() >= 1 or np.isnan(forecasts[forecast_point_index, :]).sum() >= 1:
                  continue
+
             forecast_metric = metric(true_values[forecast_point_index:forecast_point_index + horizon_length], forecasts[forecast_point_index, :])
             step_metrics.append(forecast_metric)
             step_index.append(true_values.index[forecast_point_index])
@@ -44,12 +44,13 @@ def step_forecast_metrics(forecasts, true_values, metric):
     return np.array(step_metrics)
 
 
-def horizon_metric(sample_predictions, y_true, metric_func):
+def horizon_metric(sample_predictions, y_true, metric_func, dropna=False):
     """
 
     :param sample_predictions: (n_forecast_points, forecast_horizon)
     :param y_true: (n_forecast_points + forecast_horizon)
     :param metric_func:
+    :param dropna: Drop na forecasts and observations
     :return: metric for each step in the horizon i.e. (forecast_horizon) sized array
     """
     if isinstance(y_true, list):
@@ -60,14 +61,35 @@ def horizon_metric(sample_predictions, y_true, metric_func):
     input_shape = sample_predictions.shape
     horizon_size = input_shape[1]
     horizon_metrics = []
+
+    if dropna:
+        nan_mask_true = np.isnan(y_true)
+        nan_mask_forecast = np.isnan(sample_predictions)
+        if (nan_mask_true.sum() > 0) or (nan_mask_forecast.sum() > 0):
+            # Mask each place where there is either a Na true value or forecast
+            for i in range(len(sample_predictions)):
+                true_slice = np.s_[i:i + horizon_size]
+                forecast_slice = np.s_[i, None]
+
+                sample_forecast_mask = np.logical_or(nan_mask_forecast[forecast_slice], nan_mask_true[true_slice])
+
+                nan_mask_forecast[forecast_slice] = sample_forecast_mask
+                print(sample_forecast_mask.shape)
+                print(nan_mask_true[true_slice].shape)
+                nan_mask_true[true_slice] = sample_forecast_mask.flatten()
+
+            y_true = np.ma.masked_array(y_true, mask=nan_mask_true)
+            sample_predictions = np.ma.masked_array(sample_predictions, mask=nan_mask_forecast)
+
     for horizon_step in range(horizon_size):
         predicted_horizon_steps = sample_predictions[:, horizon_step]
-        true_horizon_steps = y_true[horizon_step:len(y_true) - (horizon_size - horizon_step)]
+        true_horizon_steps = y_true[horizon_step:len(y_true) - (horizon_size - horizon_step + 1)]
 
-        nan_mask = np.isnan(true_horizon_steps)
-        if nan_mask.sum() > 0:
-            true_horizon_steps = np.extract(-nan_mask, true_horizon_steps)
-            predicted_horizon_steps = np.extract(-nan_mask, predicted_horizon_steps)
+        # nan_mask = np.isnan(true_horizon_steps)
+        # nan_mask_forecast = np.isnan(sample_predictions)
+        # if (nan_mask.sum() > 0) or (nan_mask_forecast.sum() > 0):
+        #     true_horizon_steps = np.extract(-nan_mask, true_horizon_steps)
+        #     predicted_horizon_steps = np.extract(-nan_mask, predicted_horizon_steps)
 
         metric = metric_func(predicted_horizon_steps, true_horizon_steps)
         horizon_metrics.append(metric)
