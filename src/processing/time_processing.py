@@ -59,8 +59,14 @@ def _cyclic_week_transformation(dataset):
 
 
 def _weekday_encoding(dataset):
+    dataset["weekday"] = dataset[date_column].dt.weekday
     one_hot_encodings = pd.get_dummies(dataset.weekday, prefix='weekday')
     dataset[one_hot_encodings.columns.values.tolist()] = one_hot_encodings
+
+def weekday_encoding(date_column):
+    weekday_column = date_column.dt.weekday
+    one_hot_encodings = pd.get_dummies(weekday_column, prefix='weekday')
+    return one_hot_encodings
 
 
 def extract_time_features(dataset, **kwargs):
