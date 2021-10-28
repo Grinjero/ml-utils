@@ -2,9 +2,10 @@ import numpy as np
 import pandas as pd
 
 
-def series_weights_by_mean(df: pd.DataFrame, weight_column, series_keys):
+def series_weights_uniform(df: pd.DataFrame, weight_column, series_keys):
     """
-    Calculates weights of series identified by `series_keys`. Weights are set to standard mean
+    Calculates weights of series identified by `series_keys`. Weights are set to standard uniform weights (standard mean
+    in other words)
 
     :param df: Contains all series
     :type df: pd.Dataframe
@@ -19,6 +20,27 @@ def series_weights_by_mean(df: pd.DataFrame, weight_column, series_keys):
     groups = df.groupby(series_keys)
     ngroups = groups.ngroups
     return groups[weight_column].apply(lambda gr: 1 / ngroups)
+
+
+def series_weights_by_mean(df: pd.DataFrame, weight_column, series_keys):
+    """
+    Calculates weights of series identified by `series_keys`. Weights are determined by the mean value of each group
+
+    :param df: Contains all series
+    :type df: pd.Dataframe
+    :param weight_column: Name of the column from which weights are calculated
+    :type weight_column: str
+    :param series_keys: Columns which identify different series
+    :type series_keys: list of str or a single str
+    # :param series_index: Name of the columns by which each series will be indexed if necessary
+    # :type series_index: str, optional
+    :return: series indexed by `series_keys` with values corresponding to weights of that series
+    """
+    groups = df.groupby(series_keys)
+    group_means = groups[weight_column].mean()
+    total_means = group_means.sum()
+    return group_means / total_means
+
 
 def series_weights_by_total(df: pd.DataFrame, weight_column, series_keys):
     """
