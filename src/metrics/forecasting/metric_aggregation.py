@@ -6,7 +6,7 @@ from timeseries.operations import align_series_list
 
 def _preprocess_true_values(true_values, sample_forecasts):
     if true_values.ndim == 1:
-        true_values = align_series_list(sample_forecasts, true_values)
+        true_values = align_series_list(sample_forecasts, true_values, skip_missing=True)
 
     true_values_indices = [true_sample_values.index[0] for true_sample_values in true_values]
     true_values = np.asarray(true_values)
