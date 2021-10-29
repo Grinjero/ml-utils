@@ -3,6 +3,10 @@ import matplotlib.pyplot as plt
 import seaborn as sns
 import numpy as np
 
+from pandas.tseries.frequencies import to_offset
+from timeseries import extract_true_values_for_forecast, extract_true_values_for_forecasts
+import pandas as pd
+
 
 def animate_forecast(forecasts, true_values, date_offset, y_lim_mod=0.2, interval=300, ylims=None):
     """
@@ -55,7 +59,7 @@ def animate_forecast(forecasts, true_values, date_offset, y_lim_mod=0.2, interva
     return ani
 
 
-def plot_forecasts_at_step(forecasts, true_values, forecast_step):
+def plot_forecasts_at_horizon_step(forecasts, true_values, forecast_step):
     """
     :param forecasts:
     :param true_values:
@@ -63,23 +67,30 @@ def plot_forecasts_at_step(forecasts, true_values, forecast_step):
     :param forecast_step:
     :return:
     """
+    forecasts_step_indices = []
     if isinstance(forecasts, np.ndarray) is False:
+        for forecast in forecasts:
+            forecasts_step_indices.append(forecast.index[forecast_step])
         forecasts = np.asarray(forecasts)
 
-    indices = slice(forecast_step, forecasts.shape[0] + forecast_step)
+    horizon_size = forecasts.shape[1]
+    assert -horizon_size < forecast_step < horizon_size, "Forecast step must be able to index individual forecasts"
+
     forecasts_at_step = forecasts[:, forecast_step]
 
-    plt.plot(true_values.iloc[indices].index, true_values.iloc[indices], label=f"True values", alpha=0.7)
-    plt.plot(true_values.iloc[indices].index, forecasts_at_step, label=f"Forecast at step {forecast_step}", alpha=0.7)
+    plt.plot(true_values, label=f"True values", alpha=0.7)
+    plt.plot(forecasts_step_indices, forecasts_at_step, label=f"Forecast at step {forecast_step}", alpha=0.7)
 
 
 def plot_horizon_step_metric(horizon_step_metrics, metric_name):
+    x_values = np.arange(1, len(horizon_step_metrics) + 1)
+
     plt.grid(True)
-    plt.plot(np.arange(1, len(horizon_step_metrics) + 1, dtype=np.int), horizon_step_metrics, label=metric_name)
+    plt.plot(x_values, horizon_step_metrics, label=metric_name)
     plt.xlim(1, len(horizon_step_metrics) + 1)
 
 
-def plot_forecasts_scatterplot_at_step(forecasts, true_values, forecast_step):
+def plot_forecasts_scatterplot_at_horizon_step(forecasts, true_values, forecast_step):
     """
 
     :param forecasts:
@@ -89,15 +100,17 @@ def plot_forecasts_scatterplot_at_step(forecasts, true_values, forecast_step):
     :return:
     """
 
-    if isinstance(true_values, np.ndarray) is False:
-        true_values = np.asarray(true_values)
+    _, true_values = extract_true_values_for_forecasts(true_values, forecasts)
+    #
+    # if isinstance(true_values, np.ndarray) is False:
+    #     true_values = np.asarray(true_values)
 
     if isinstance(forecasts, np.ndarray) is False:
         forecasts = np.asarray(forecasts)
 
     horizon_size = forecasts.shape[1]
 
-    true_values_ahead = true_values[forecast_step:-(horizon_size - forecasts.shape)]
+    true_values_ahead = true_values[:, forecast_step]
     step_ahead_forecasts = forecasts[:, forecast_step]
 
     fig, ax = plt.subplots()

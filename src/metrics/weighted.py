@@ -62,7 +62,7 @@ def series_weights_by_total(df: pd.DataFrame, weight_column, series_keys):
     return df.groupby(series_keys)[weight_column].apply(lambda gr: gr.sum() / total_sum)
 
 
-def weighted_metric(series_metrics_df, weights, series_keys, metric_columns, new_columns_prefix="W"):
+def apply_weighted_metric(series_metrics_df, weights, series_keys, metric_columns, new_columns_prefix="W"):
     """
     Applies the given weights to per-series metrics that are already calculated.
 
