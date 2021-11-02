@@ -4,9 +4,9 @@ import pandas as pd
 from timeseries.operations import align_series_list
 
 
-def _preprocess_true_values(true_values, sample_forecasts):
+def _preprocess_true_values(true_values, sample_forecasts, skip_missing=False):
     if true_values.ndim == 1:
-        true_values = align_series_list(sample_forecasts, true_values, skip_missing=True)
+        true_values = align_series_list(sample_forecasts, true_values, skip_missing=skip_missing)
 
     true_values_indices = [true_sample_values.index[0] for true_sample_values in true_values]
     true_values = np.asarray(true_values)
@@ -30,7 +30,7 @@ def agg_forecast_origin_metrics(sample_forecasts, true_values, metric, skipna=Fa
     :return: metric for each forecast point (n_forecast_points) indexed by the true values associated with those forecast
         points
     """
-    true_value_indices, true_values = _preprocess_true_values(true_values, sample_forecasts)
+    true_value_indices, true_values = _preprocess_true_values(true_values, sample_forecasts, skipna)
     sample_forecasts = _preprocess_sample_forecasts(sample_forecasts)
 
     step_metrics = []
