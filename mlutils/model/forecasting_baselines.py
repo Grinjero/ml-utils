@@ -1,7 +1,7 @@
 import pandas as pd
 import numpy as np
 
-from model import forecasting_interface
+from mlutils.model import forecasting_interface
 
 
 class BaselineBase(forecasting_interface.ForecastingModelInterface):

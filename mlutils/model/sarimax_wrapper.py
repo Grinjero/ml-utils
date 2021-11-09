@@ -1,8 +1,8 @@
 import pandas as pd
 from statsmodels.tsa.statespace.sarimax import SARIMAX
 
-from evaluation.forecasting import extract_exog_features, step_by_step_forecast
-from model import forecasting_interface
+from mlutils.evaluation.forecasting.statsmodels_out_of_sample import extract_exog_features, step_by_step_forecast
+from mlutils.model import forecasting_interface
 
 
 class SARIMAXWrapper(forecasting_interface.ForecastingModelInterface):

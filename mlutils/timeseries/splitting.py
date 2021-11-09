@@ -1,7 +1,7 @@
 import pandas as pd
 import numpy as np
 
-from timeseries.processing import remove_following, remove_leading, element_checker
+from mlutils.timeseries.processing import remove_following, remove_leading, element_checker
 
 
 def split_by_holes(series, min_hole_size, min_segment_size, is_nan_hole=True, is_inf_hole=False, hole_values=[]):

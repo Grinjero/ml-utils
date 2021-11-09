@@ -3,6 +3,29 @@ import matplotlib.pyplot as plt
 from statsmodels.tsa import seasonal
 
 
+def plot_series(series, labels=None, plot_column=None):
+    if plot_column is None:
+        plot_column = 0
+
+    if labels is not None:
+        assert len(series) == len(labels), "Number of labels must be equal to number of series"
+
+    for ts in series:
+        ts.plot(y=plot_column)
+
+
+def plot_series_scatterplot(series, labels=None, plot_column=None):
+    if plot_column is None:
+        plot_column = 0
+
+    if labels is not None:
+        assert len(series) == len(labels), "Number of labels must be equal to number of series"
+
+    for ts in series:
+        # ts.plot(kind="scatter")
+        plt.scatter(x=ts.index.values, y=ts.values)
+
+
 def plot_series_segments(series, index_pairs):
     """
     Plots the segments of the given series defined by `index_pairs`

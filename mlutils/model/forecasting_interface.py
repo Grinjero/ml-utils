@@ -1,9 +1,9 @@
 import uuid
 
-import model.model_interface
+import mlutils.model.model_interface
 
 
-class ForecastingModelInterface(model.model_interface.Model):
+class ForecastingModelInterface(mlutils.model.model_interface.Model):
     def __init__(self):
         super().__init__()
 

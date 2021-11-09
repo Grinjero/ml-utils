@@ -4,7 +4,7 @@ import seaborn as sns
 import numpy as np
 
 from pandas.tseries.frequencies import to_offset
-from timeseries import extract_true_values_for_forecast, extract_true_values_for_forecasts
+from mlutils.timeseries import extract_true_values_for_forecast, extract_true_values_for_forecasts
 import pandas as pd
 
 
