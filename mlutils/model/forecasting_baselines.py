@@ -142,7 +142,7 @@ class Naive(BaselineBase):
 class MovingAverage(BaselineBase):
     """
     Forecasted value is the moving average of a sliding window. For longer horizons (larger than window_size) the sliding
-    window calculates the moving average of previously calculated averages
+        window calculates the moving average of previously calculated averages
     """
 
     def __init__(self, window_size, whole_series: pd.Series = None, target_column=None):

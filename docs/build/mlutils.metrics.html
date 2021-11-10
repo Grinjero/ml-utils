@@ -1,0 +1,205 @@
+
+<!DOCTYPE html>
+
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+
+    <title>mlutils.metrics package &#8212; mlutils  documentation</title>
+    <link rel="stylesheet" type="text/css" href="_static/pygments.css" />
+    <link rel="stylesheet" type="text/css" href="_static/alabaster.css" />
+    <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js"></script>
+    <script src="_static/jquery.js"></script>
+    <script src="_static/underscore.js"></script>
+    <script src="_static/doctools.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+   
+  <link rel="stylesheet" href="_static/custom.css" type="text/css" />
+  
+  
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
+
+  </head><body>
+  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          
+
+          <div class="body" role="main">
+            
+  <section id="module-mlutils.metrics">
+<span id="mlutils-metrics-package"></span><h1>mlutils.metrics package<a class="headerlink" href="#module-mlutils.metrics" title="Permalink to this headline">¶</a></h1>
+<section id="subpackages">
+<h2>Subpackages<a class="headerlink" href="#subpackages" title="Permalink to this headline">¶</a></h2>
+<div class="toctree-wrapper compound">
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="mlutils.metrics.forecasting.html">mlutils.metrics.forecasting package</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="mlutils.metrics.forecasting.html#submodules">Submodules</a></li>
+<li class="toctree-l2"><a class="reference internal" href="mlutils.metrics.forecasting.html#module-mlutils.metrics.forecasting.metric_aggregation">mlutils.metrics.forecasting.metric_aggregation module</a></li>
+</ul>
+</li>
+</ul>
+</div>
+</section>
+<section id="submodules">
+<h2>Submodules<a class="headerlink" href="#submodules" title="Permalink to this headline">¶</a></h2>
+</section>
+<section id="module-mlutils.metrics.general">
+<span id="mlutils-metrics-general-module"></span><h2>mlutils.metrics.general module<a class="headerlink" href="#module-mlutils.metrics.general" title="Permalink to this headline">¶</a></h2>
+<dl class="py function">
+<dt class="sig sig-object py" id="mlutils.metrics.general.calculate_metric_dict">
+<span class="sig-prename descclassname"><span class="pre">mlutils.metrics.general.</span></span><span class="sig-name descname"><span class="pre">calculate_metric_dict</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">predictions</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">true_values</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">metrics</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#mlutils.metrics.general.calculate_metric_dict" title="Permalink to this definition">¶</a></dt>
+<dd><p>Calculates each given metric for given predictions and their true values.</p>
+<p>Use case: in case of running multiple different experiments at the top of the file you can easily define your set of
+metrics and easily store them. If at a later point you decide to change your metrics you need only change a single
+dict</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>predictions</strong> – </p></li>
+<li><p><strong>true_values</strong> – </p></li>
+<li><p><strong>metrics</strong> – dict with key-value pairs <cite>metric name</cite>-<cite>metric func</cite> that you want calculated.
+Each metric func should receive parameters (<cite>predictions</cite>, <cite>true_values</cite>)</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+</section>
+<section id="module-mlutils.metrics.relative">
+<span id="mlutils-metrics-relative-module"></span><h2>mlutils.metrics.relative module<a class="headerlink" href="#module-mlutils.metrics.relative" title="Permalink to this headline">¶</a></h2>
+</section>
+<section id="module-mlutils.metrics.weighted">
+<span id="mlutils-metrics-weighted-module"></span><h2>mlutils.metrics.weighted module<a class="headerlink" href="#module-mlutils.metrics.weighted" title="Permalink to this headline">¶</a></h2>
+<dl class="py function">
+<dt class="sig sig-object py" id="mlutils.metrics.weighted.apply_weighted_metric">
+<span class="sig-prename descclassname"><span class="pre">mlutils.metrics.weighted.</span></span><span class="sig-name descname"><span class="pre">apply_weighted_metric</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">series_metrics_df</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">weights</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">series_keys</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">metric_columns</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">new_columns_prefix</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'W'</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#mlutils.metrics.weighted.apply_weighted_metric" title="Permalink to this definition">¶</a></dt>
+<dd><p>Applies the given weights to per-series metrics that are already calculated.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>series_metrics_df</strong> (<em>pd.DataFrame</em>) – df containing results for a single model</p></li>
+<li><p><strong>weights</strong> (<em>pd.DataFrame</em>) – weights for each series metric</p></li>
+<li><p><strong>series_keys</strong> (<em>list of str</em><em> or </em><em>a single str</em>) – Columns which identify different series</p></li>
+<li><p><strong>metric_columns</strong> – columns names of each metric</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>weighted metric of metrics that have been calculated on individual series</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="mlutils.metrics.weighted.series_weights_by_mean">
+<span class="sig-prename descclassname"><span class="pre">mlutils.metrics.weighted.</span></span><span class="sig-name descname"><span class="pre">series_weights_by_mean</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">df</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">pandas.core.frame.DataFrame</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">weight_column</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">series_keys</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#mlutils.metrics.weighted.series_weights_by_mean" title="Permalink to this definition">¶</a></dt>
+<dd><p>Calculates weights of series identified by <cite>series_keys</cite>. Weights are determined by the mean value of each group</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>df</strong> (<em>pd.Dataframe</em>) – Contains all series</p></li>
+<li><p><strong>weight_column</strong> (<em>str</em>) – Name of the column from which weights are calculated</p></li>
+<li><p><strong>series_keys</strong> (<em>list of str</em><em> or </em><em>a single str</em>) – Columns which identify different series</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>series indexed by <cite>series_keys</cite> with values corresponding to weights of that series</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="mlutils.metrics.weighted.series_weights_by_total">
+<span class="sig-prename descclassname"><span class="pre">mlutils.metrics.weighted.</span></span><span class="sig-name descname"><span class="pre">series_weights_by_total</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">df</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">pandas.core.frame.DataFrame</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">weight_column</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">series_keys</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#mlutils.metrics.weighted.series_weights_by_total" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="simple">
+<dt>Calculates weights of series identified by <cite>series_keys</cite>. Weights are calculated by weighted averaging of total sums</dt><dd><p>of each series</p>
+</dd>
+</dl>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>df</strong> (<em>pd.Dataframe</em>) – Contains all series</p></li>
+<li><p><strong>weight_column</strong> (<em>str</em>) – Name of the column from which weights are calculated</p></li>
+<li><p><strong>series_keys</strong> (<em>list of str</em><em> or </em><em>a single str</em>) – Columns which identify different series</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>series indexed by <cite>series_keys</cite> with values corresponding to weights of that series</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="mlutils.metrics.weighted.series_weights_uniform">
+<span class="sig-prename descclassname"><span class="pre">mlutils.metrics.weighted.</span></span><span class="sig-name descname"><span class="pre">series_weights_uniform</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">df</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">pandas.core.frame.DataFrame</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">weight_column</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">series_keys</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#mlutils.metrics.weighted.series_weights_uniform" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="simple">
+<dt>Calculates weights of series identified by <cite>series_keys</cite>. Weights are set to standard uniform weights (standard mean</dt><dd><p>in other words)</p>
+</dd>
+</dl>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>df</strong> (<em>pd.Dataframe</em>) – Contains all series</p></li>
+<li><p><strong>weight_column</strong> (<em>str</em>) – Name of the column from which weights are calculated</p></li>
+<li><p><strong>series_keys</strong> (<em>list of str</em><em> or </em><em>a single str</em>) – Columns which identify different series</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>series indexed by <cite>series_keys</cite> with values corresponding to weights of that series</p>
+</dd>
+</dl>
+</dd></dl>
+
+</section>
+</section>
+
+
+          </div>
+          
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+<h1 class="logo"><a href="index.html">mlutils</a></h1>
+
+
+
+
+
+
+
+
+<h3>Navigation</h3>
+
+<div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="index.html">Documentation overview</a><ul>
+  </ul></li>
+</ul>
+</div>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="footer">
+      &copy;2021, Filip Bronić.
+      
+      |
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 4.2.0</a>
+      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.12</a>
+      
+      |
+      <a href="_sources/mlutils.metrics.rst.txt"
+          rel="nofollow">Page source</a>
+    </div>
+
+    
+
+    
+  </body>
+</html>

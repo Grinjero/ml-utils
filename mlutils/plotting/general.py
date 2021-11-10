@@ -18,7 +18,7 @@ def _construct_plotting_kwargs(**kwargs):
 def plot_twin_y_axes(series_1, series_2, label1, label2, color1, color2, ax=None, **kwargs):
     """
     Useful for plotting data that needs to be observed on the same graph, but that "lives" in different scales
-    etc. mean and std of a variable
+        etc. mean and std of a variable
 
     :param series_1: a tuple (x axis, y axis), pd.Series or simple array plotted on the left
     :param series_2: a tuple (x axis, y axis), pd.Series or simple array plotted on the right

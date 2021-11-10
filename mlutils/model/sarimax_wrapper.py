@@ -9,7 +9,7 @@ class SARIMAXWrapper(forecasting_interface.ForecastingModelInterface):
     def __init__(self, target_column, order, seasonal_order, exogenous_columns=None):
         """
         Wrapper for the statsmodels.tsa.statespace.sarimax.SARIMAX model so it can be more easily used alongside other
-        other methods
+            other methods
 
         :param target_column: name of the column that is the targeted forecasted value
         :param order: (p, d, q) of the SARIMAX model

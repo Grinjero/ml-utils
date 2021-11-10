@@ -5,7 +5,7 @@ import pandas as pd
 def series_weights_uniform(df: pd.DataFrame, weight_column, series_keys):
     """
     Calculates weights of series identified by `series_keys`. Weights are set to standard uniform weights (standard mean
-    in other words)
+        in other words)
 
     :param df: Contains all series
     :type df: pd.Dataframe
@@ -13,8 +13,6 @@ def series_weights_uniform(df: pd.DataFrame, weight_column, series_keys):
     :type weight_column: str
     :param series_keys: Columns which identify different series
     :type series_keys: list of str or a single str
-    # :param series_index: Name of the columns by which each series will be indexed if necessary
-    # :type series_index: str, optional
     :return: series indexed by `series_keys` with values corresponding to weights of that series
     """
     groups = df.groupby(series_keys)
@@ -32,8 +30,6 @@ def series_weights_by_mean(df: pd.DataFrame, weight_column, series_keys):
     :type weight_column: str
     :param series_keys: Columns which identify different series
     :type series_keys: list of str or a single str
-    # :param series_index: Name of the columns by which each series will be indexed if necessary
-    # :type series_index: str, optional
     :return: series indexed by `series_keys` with values corresponding to weights of that series
     """
     groups = df.groupby(series_keys)
@@ -53,8 +49,6 @@ def series_weights_by_total(df: pd.DataFrame, weight_column, series_keys):
     :type weight_column: str
     :param series_keys: Columns which identify different series
     :type series_keys: list of str or a single str
-    # :param series_index: Name of the columns by which each series will be indexed if necessary
-    # :type series_index: str, optional
     :return: series indexed by `series_keys` with values corresponding to weights of that series
     """
 

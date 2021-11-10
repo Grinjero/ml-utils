@@ -17,7 +17,7 @@
 
 # -- Project information -----------------------------------------------------
 
-project = 'ml-utils'
+project = 'mlutils'
 copyright = '2021, Filip Bronić'
 author = 'Filip Bronić'
 
@@ -61,14 +61,8 @@ html_sidebars = {
 # so a file named "default.css" will overwrite the builtin "default.css".
 html_static_path = ['_static']
 
-# html_theme_options = {
-#     'headerbordercolor': 'gray'
-# }
-
-
 # -- Skip select files
-modules_to_skip = ["model.test"]
-
+modules_to_skip = []
 
 def skip_modules(app, what, name, obj, skip, options):
     print("Skipping ", skip, name)
