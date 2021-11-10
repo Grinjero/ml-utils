@@ -5,6 +5,7 @@ import numpy as np
 
 from pandas.tseries.frequencies import to_offset
 from mlutils.timeseries import extract_true_values_for_forecast, extract_true_values_for_forecasts
+from mlutils.timeseries._operations import align_series_list
 import pandas as pd
 
 
@@ -88,6 +89,45 @@ def plot_horizon_step_metric(horizon_step_metrics, metric_name):
     plt.grid(True)
     plt.plot(x_values, horizon_step_metrics, label=metric_name)
     plt.xlim(1, len(horizon_step_metrics) + 1)
+
+
+def plot_forecasts_scatterplot(forecasts, true_values, show_legend=False, ax=None):
+    """
+    Plots the scatterplot
+    :param forecasts:
+    :param true_values:
+    """
+    true_value_indices, true_values = extract_true_values_for_forecasts(true_values, forecasts)
+    if isinstance(forecasts, np.ndarray) is False:
+        forecasts = np.asarray(forecasts)
+
+    horizon_size = forecasts.shape[1]
+
+    if ax is None:
+        fig, ax = plt.subplots()
+
+    for step_ind in range(horizon_size):
+        true_values_ahead = true_values[:, step_ind]
+        step_ahead_forecasts = forecasts[:, step_ind]
+        ax.scatter(x=true_values_ahead, y=step_ahead_forecasts, label=f"{step_ind + 1} forecast")
+
+    plt.ylabel("Forecasts")
+    plt.xlabel("True")
+
+    lims = [
+        np.min([ax.get_xlim(), ax.get_ylim()]),  # min of both axes
+        np.max([ax.get_xlim(), ax.get_ylim()]),  # max of both axes
+    ]
+
+    ax.plot(lims, lims, 'k-', alpha=0.75, zorder=0)
+    ax.set_aspect('equal')
+    ax.set_xlim(lims)
+    ax.set_ylim(lims)
+
+    if show_legend is True:
+        ax.legend()
+
+    return ax
 
 
 def plot_forecasts_scatterplot_at_horizon_step(forecasts, true_values, forecast_step):

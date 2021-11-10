@@ -1,4 +1,4 @@
-from mlutils.timeseries.operations import align_series_list, align_series
+from mlutils.timeseries._operations import align_series_list, align_series
 import numpy as np
 
 __all__ = [

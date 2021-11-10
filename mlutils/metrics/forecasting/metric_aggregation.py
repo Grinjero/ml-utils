@@ -1,7 +1,7 @@
 import numpy as np
 import pandas as pd
 
-from mlutils.timeseries.operations import align_series_list
+from mlutils.timeseries._operations import align_series_list
 
 
 def _preprocess_true_values(true_values, sample_forecasts, skip_missing=False):
