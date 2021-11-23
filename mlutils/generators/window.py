@@ -10,7 +10,7 @@ import tensorflow as tf
 class WindowGenerator:
     def __init__(self, sequence_length, target_sequence_length, shift, sequence_stride, train_df, val_df, test_df,
                  feature_columns,
-                 label_columns, inverse_transformations, shuffle_size=32, batch_size=8):
+                 label_columns, shuffle_size=32, batch_size=8):
         """
         :param sequence_length: time length of the input timesequence
         :param target_sequence_length: time length of the output target timesequence
@@ -20,17 +20,13 @@ class WindowGenerator:
         :param test_df: test data DataFrame
         :param feature_columns: columns to be used as input features, column names
         :param label_columns: columns to be used as target features, column names
-        :param inverse_transformations: dict that transformations of certain features back to their original state
-            (mostly used to transform predictions back their real world representation).
-            Each value is a tuple(transformation_func, original feature name).
-            Function arguments are (data to be transformed, input features).
         """
+
+        assert sequence_stride >= 1
 
         self.train_df = train_df
         self.val_df = val_df
         self.test_df = test_df
-
-        self.inverse_transformations = inverse_transformations
 
         self.sequence_length = sequence_length
         self.target_sequence_length = target_sequence_length
@@ -62,7 +58,7 @@ class WindowGenerator:
         self.input_indices = np.arange(self.total_window_size)[self.input_slice]
 
         self.label_start = self.total_window_size - self.target_sequence_length * sequence_stride
-        self.labels_slice = slice(self.label_start, -1, sequence_stride)
+        self.labels_slice = slice(self.label_start, self.total_window_size, sequence_stride)
         self.label_indices = np.arange(self.total_window_size)[self.labels_slice]
 
     def split_window(self, x, y):
@@ -90,8 +86,8 @@ class WindowGenerator:
 
         assert len(features) == len(targets)
 
-        start_positions = np.arange(start=0, stop=len(features) - self.total_window_size, step=self.sequence_stride)
-        slices = [np.arange(start_position, start_position + self.total_window_size)
+        start_positions = np.arange(start=0, stop=len(features) - self.total_window_size - 1, step=self.sequence_stride)
+        slices = [np.arange(start=start_position, stop=start_position + self.total_window_size)
                   for start_position in start_positions]
         input_indices = [sample_slice[self.input_slice] for sample_slice in slices]
         label_indices = [sample_slice[self.labels_slice] for sample_slice in slices]
@@ -131,30 +127,46 @@ class WindowGenerator:
 
     def get_values(self, start_index, end_index, selected_columns, selected_set="train"):
         chosen_set = self._choose_set(selected_set)
-        return chosen_set[selected_columns].iloc[start_index * self.sequence_stride:end_index * self.sequence_stride].to_numpy()
+        return chosen_set[selected_columns].iloc[
+               start_index * self.sequence_stride:end_index * self.sequence_stride].to_numpy()
 
-    def get_values_as_timeseries(self, selected_column, selected_set):
+    def get_values_as_timeseries(self, selected_column, selected_set, return_indices=False):
         """
         :param selected_column: str or list of str
         :param selected_set:
+        :param return_indices: also corresponding indices for x and y
         :return:
         """
         chosen_set = self._choose_set(selected_set)
 
+        index = chosen_set.index
         values = chosen_set[selected_column].to_numpy()
         history_timeseries = []
         target_timeseries = []
+
+        if return_indices:
+            history_loc_list = []
+            target_loc_list = []
+
         n = len(values)
         for i in range(0, n - self.total_window_size):
             window_indices = self.get_window_indices(i, True)
             history_indices, target_indices = window_indices[self.input_indices], window_indices[self.label_indices]
             histories, targets = values[history_indices], values[target_indices]
 
+            if return_indices:
+                history_index, target_index = index[history_indices], index[target_indices]
+                history_loc_list.append(history_index)
+                target_loc_list.append(target_index)
+
             history_timeseries.append(histories)
             target_timeseries.append(targets)
 
         history_timeseries = np.stack(history_timeseries)
         target_timeseries = np.stack(target_timeseries)
+
+        if return_indices:
+            return history_timeseries, target_timeseries, history_loc_list, target_loc_list
         return history_timeseries, target_timeseries
 
     def _choose_set(self, selected_set):
@@ -172,28 +184,36 @@ class WindowGenerator:
         extracted_x = x[:, indices, :]
         return np.array(extracted_x)
 
-
     def extract_inputs_from_windows(self, x):
         return self.extract_values_from_windows(x, self.input_indices)
-
 
     def extract_targets_from_windows(self, x):
         return self.extract_values_from_windows(x, self.label_indices)
 
-
-    def apply_model(self, model, selected_set="test", transform_labels=False):
-        x, y_true = self.get_values_as_timeseries(self.feature_column_names, selected_set)
-        # x = self.extract_inputs_from_windows(x)
+    def apply_model(self, model, selected_set="test", return_indices=False):
+        values = self.get_values_as_timeseries(self.feature_column_names, selected_set, return_indices)
+        x, y_true = values[0], values[1]
 
         predictions = model(x).numpy()
-        if transform_labels:
 
-            predictions = [
-                self.apply_inverse_transformation(sample_predictions, input_features, self.label_column_names[0]) for
-                sample_predictions, input_features in zip(predictions, x)]
+        if return_indices:
+            indexed_predictions = []
 
-        return np.stack(predictions)
+            predictions_indices = values[-1]
+            for single_forecast, single_forecast_index in zip(predictions, predictions_indices):
+                if len(self.label_column_names) == 1:
+                    indexed_prediction = pd.Series(index=single_forecast_index, data=single_forecast,
+                                                   name=self.label_column_names[0])
+                else:
+                    indexed_prediction = pd.DataFrame(index=single_forecast_index, data=single_forecast,
+                                                      columns=self.label_column_names)
 
+                indexed_predictions.append(indexed_prediction)
+
+            return indexed_predictions
+
+        else:
+            return np.stack(predictions)
 
     def example(self, n=5, example_set="test", include_other=False, full_window=False):
         """
@@ -221,49 +241,106 @@ class WindowGenerator:
             inputs, labels = input_data.iloc[input_indices], label_data.iloc[labels_indices]
             inputs, labels = np.array(inputs, dtype=np.float32), np.array(labels, dtype=np.float32)
             if include_other:
-                add_data = {column: chosen_set.iloc[window_indices][column].to_numpy() for column in chosen_set.columns }
+                add_data = {column: chosen_set.iloc[window_indices][column].to_numpy() for column in chosen_set.columns}
                 samples.append((inputs, labels, add_data))
             else:
                 samples.append((inputs, labels))
 
         return samples
 
-    def apply_inverse_transformation(self, outputs, data, feature_name, indices=None):
-        transformation_func, orig_feature_name = self.inverse_transformations[feature_name]
-
-        outputs = outputs.reshape(-1, 1)
-
-        if isinstance(data, dict):
-            orig = data[orig_feature_name]
-        else:
-            if orig_feature_name in self.feature_column_indices:
-                orig_feature_ind = self.feature_column_indices[orig_feature_name]
-                orig = data[:, orig_feature_ind].reshape(-1, 1)
-            else:
-                orig = data
-        if indices is not None:
-            orig = orig[indices]
-        return transformation_func(outputs, orig)
+    # def apply_inverse_transformation(self, outputs, data, feature_name, indices=None):
+    #     transformation_func, orig_feature_name = self.inverse_transformations[feature_name]
+    #
+    #     outputs = outputs.reshape(-1, 1)
+    #
+    #     if isinstance(data, dict):
+    #         orig = data[orig_feature_name]
+    #     else:
+    #         if orig_feature_name in self.feature_column_indices:
+    #             orig_feature_ind = self.feature_column_indices[orig_feature_name]
+    #             orig = data[:, orig_feature_ind].reshape(-1, 1)
+    #         else:
+    #             orig = data
+    #     if indices is not None:
+    #         orig = orig[indices]
+    #     return transformation_func(outputs, orig)
 
 
 if __name__ == "__main__":
-    dataset = read_location_flow_csv("Sisak", "Žitna")
-    dataset["date"] = pd.to_datetime(dataset["date"])
-    batch_size = 8
-    shuffle_dim = 64
+    df = pd.read_csv("D:/Faks/T-LOGIC/SalesPrediction/data/abc_xyz_machine_sales.csv")
+    df["vend_date"] = pd.to_datetime(df["vend_date"])
+    machine_products_combos = [
+        (1623, 35351),
+        (1432, 3353),
+        (838, 3979),
+        (1269, 3995),
+        (1610, 3961),
+        (42413, 4446),
+        (38130, 77122),
+        (38364, 77118)
+    ]
 
-    n = len(dataset)
-    val_start_index = int(n * 0.6)
-    test_start_index = int(n * (0.8))
-    window_generator = WindowGenerator(20, 10, 20,
-                                       train_df=dataset.iloc[0:val_start_index],
-                                       val_df=dataset.iloc[val_start_index:test_start_index],
-                                       test_df=dataset.iloc[test_start_index:],
-                                       sequence_stride=1,
-                                       feature_columns=["jam_factor", "speed_cut"],
-                                       label_columns=["jam_factor"])
 
-    train = window_generator.train
+    def asfreq_0_holes(group):
+        asf = group.set_index("vend_date", drop=True).sort_index().asfreq("D")
 
-    print(train.take(1))
-    window_generator.plot(title="Traffic jam")
+        columns_to_0 = ["daily_quantity", "daily_value"]
+        columns_others = list(set(asf.columns) - set(columns_to_0))
+
+        asf.loc[:, columns_others] = asf.loc[:, ["machine_id", "product_id"]].ffill()
+        asf.loc[:, columns_to_0] = asf.loc[:, ["daily_quantity", "daily_value"]].fillna(0)
+        return asf.reset_index(drop=False)
+
+
+    print("Started dropping combos")
+    df = df[df[["product_id", "machine_id"]].apply(
+        lambda row: (row.machine_id, row.product_id) in machine_products_combos, axis=1)]
+    print("Dropped all other combos")
+    df = df.groupby(["machine_id", "product_id"]).apply(
+        asfreq_0_holes
+    ).reset_index(drop=True)
+    print("Filled sale holes")
+    generator_dict = {}
+
+    train_data_percentage = 0.4
+    val_data_percentage = 0.3
+    history = 14
+    future = 7
+    sequence_stride = 1
+    label_shape = None
+    input_shape = None
+
+    used_feature_names = ["daily_quantity"]
+    target_feature_name = ["daily_quantity"]
+
+    for (machine_id, product_id), group in df.groupby(["machine_id", "product_id"]):
+        train_group = group.set_index("vend_date").asfreq("D")
+        n = len(group)
+        val_start_index = int(n * train_data_percentage)
+        test_start_index = int(n * (train_data_percentage + val_data_percentage))
+
+        generator_dict[(machine_id, product_id)] = WindowGenerator(history, future, shift=history,
+                                                                   train_df=train_group.iloc[0:val_start_index],
+                                                                   val_df=train_group.iloc[
+                                                                          val_start_index:test_start_index],
+                                                                   test_df=train_group.iloc[test_start_index:],
+                                                                   sequence_stride=sequence_stride,
+                                                                   feature_columns=used_feature_names,
+                                                                   label_columns=target_feature_name)
+        label_shape = generator_dict[(machine_id, product_id)].label_shape
+        input_shape = generator_dict[(machine_id, product_id)].input_shape
+
+    for machine_id, product_id in generator_dict.keys():
+        window_generator = generator_dict[(machine_id, product_id)]
+
+        for input, label in window_generator.train:
+            assert label.shape[:-2] == label_shape
+            assert input.shape[:-2] == input_shape
+        for input, label in window_generator.val:
+            assert label.shape[:-2] == label_shape
+            assert input.shape[:-2] == input_shape
+        for input, label in window_generator.test:
+            assert label.shape[:-2] == label_shape
+            assert input.shape[:-2] == input_shape
+
+    print("Done all labels are of same shape")

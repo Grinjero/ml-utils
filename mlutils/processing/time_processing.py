@@ -23,12 +23,15 @@ def _extract_time_components(dataset, date_column="date"):
 #
 #
 #
+def week_time(datetime_series):
+    return datetime_series.apply(
+        lambda x: (x - (datetime(year=x.year, month=x.month, day=x.day) - timedelta(days=x.weekday()))))
 
 def timedelta_to_float(timedelta_series):
     return timedelta_series.seconds() / 3600
 
 
-def _cyclic_hour_transformation(dataset):
+def cyclic_hour_transformation(dataset):
     """
     sin and cos transformation is used to preserve the cyclical nature of hours
     """
@@ -43,11 +46,14 @@ def _cyclic_hour_transformation(dataset):
     dataset["polar_time_cos"] = time_cos
 
 
-def _cyclic_week_transformation(dataset):
+def cyclic_week_transformation(dataset, datetime_column=None):
     """
     sin and cos transformation is used to preserve the cyclical nature of weeks
     """
-    week_time_array = dataset["week_time"]
+    if "week_time" not in dataset.columns:
+        week_time_array = week_time(dataset[datetime_column])
+    else:
+        week_time_array = dataset["week_time"]
     normalized_week_time = np.array(
         [week_time.total_seconds() / (7 * 24 * 3600) for week_time in week_time_array]
     )
@@ -71,8 +77,8 @@ def weekday_encoding(date_column):
 
 def extract_time_features(dataset, **kwargs):
     _extract_time_components(dataset)
-    _cyclic_hour_transformation(dataset)
-    _cyclic_week_transformation(dataset)
+    cyclic_hour_transformation(dataset)
+    cyclic_week_transformation(dataset)
     _weekday_encoding(dataset)
 
 

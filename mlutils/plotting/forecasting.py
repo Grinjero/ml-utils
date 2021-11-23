@@ -80,7 +80,7 @@ def plot_forecasts_at_horizon_step(forecasts, true_values, forecast_step):
     forecasts_at_step = forecasts[:, forecast_step]
 
     plt.plot(true_values, label=f"True values", alpha=0.7)
-    plt.plot(forecasts_step_indices, forecasts_at_step, label=f"Forecast at step {forecast_step}", alpha=0.7)
+    plt.plot(forecasts_step_indices, forecasts_at_step, label=f"Forecast at step {forecast_step + 1}", alpha=0.7)
 
 
 def plot_horizon_step_metric(horizon_step_metrics, metric_name):
