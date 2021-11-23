@@ -20,14 +20,14 @@ class Seq2SeqLSTM(tf.keras.Model):
 
         for i in range(self.num_stacked_rnn):
             ret_seq = i != (self.num_stacked_rnn - 1)
-            layer = layers.LSTM(self.hidden_units, return_sequences=ret_seq, return_state=True)
+            layer = layers.LSTM(self.hidden_units, return_sequences=ret_seq, return_state=True, name=f"encoder_LSTM_{i}")
             self.encoder_layers.append(layer)
 
     def _construct_decoder(self):
         self.decoder_layers = []
 
         for i in range(self.num_stacked_rnn):
-            cell = layers.LSTM(self.hidden_units, return_sequences=True)
+            cell = layers.LSTM(self.hidden_units, return_sequences=True, name=f"decoder_LSTM_{i}")
             self.decoder_layers.append(cell)
 
         self.context_repeater = layers.RepeatVector(self.out_steps)
@@ -37,14 +37,17 @@ class Seq2SeqLSTM(tf.keras.Model):
     def call(self, inputs, training=None, mask=None):
         previous_outs = inputs
 
-        states = []
-        for encoder_layer in self.encoder_layers:
+        layers_states = []
+        for layer_index, encoder_layer in enumerate(self.encoder_layers):
+            print(f"Encoder layer {layer_index}")
+            print(previous_outs)
+
             previous_outs, *state = encoder_layer(previous_outs)
-            states.append(state)
+            layers_states.append(state)
 
         # context vector
         previous_outs = self.context_repeater(previous_outs)
-        for decoder_layer, encoder_state in zip(self.decoder_layers, states):
+        for decoder_layer, encoder_state in zip(self.decoder_layers, layers_states):
             previous_outs = decoder_layer(previous_outs, initial_state=encoder_state)
 
         forecast = self.out(previous_outs)
