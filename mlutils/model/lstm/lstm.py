@@ -98,7 +98,7 @@ def one_shot_LSTM(input_shape, future_target, num_units=[15, 20], dense_units=[]
         dropout_decoder = Dropout(0.1, name="dropout_decoder_{}".format(counter))(dense_decoder)
 
         previous_out = dropout_decoder
-    dense_out = Dense(future_target, name="dense")(previous_out)
+    dense_out = Dense(future_target, name="dense", activation=None)(previous_out)
 
     model = tf.keras.Model(inputs, dense_out)
     return model, "{}_LSTM_one_shot".format(len(num_units))

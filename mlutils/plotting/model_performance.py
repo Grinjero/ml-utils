@@ -14,7 +14,9 @@ def plot_loss_function(history, y_limit=None, yscale="linear"):
     plt.figure(figsize=(9, 4))
     plt.title("Loss over epochs")
     plt.plot(history.history['loss'], label='training')
-    plt.plot(history.history['val_loss'], label='val')
+
+    if 'val_loss' in history.history:
+        plt.plot(history.history['val_loss'], label='val')
     plt.yscale(yscale)
     plt.xlabel('Epoch')
     plt.ylabel('Loss function, {} scale'.format(yscale))
