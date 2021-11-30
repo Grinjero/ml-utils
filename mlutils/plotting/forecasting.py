@@ -2,6 +2,7 @@ import matplotlib.animation as animation
 import matplotlib.pyplot as plt
 import seaborn as sns
 import numpy as np
+import wandb
 
 from pandas.tseries.frequencies import to_offset
 from mlutils.timeseries import extract_true_values_for_forecast, extract_true_values_for_forecasts
@@ -82,13 +83,22 @@ def plot_forecasts_at_horizon_step(forecasts, true_values, forecast_step):
     plt.plot(true_values, label=f"True values", alpha=0.7)
     plt.plot(forecasts_step_indices, forecasts_at_step, label=f"Forecast at step {forecast_step + 1}", alpha=0.7)
 
+    return forecasts_step_indices, forecasts_at_step
 
-def plot_horizon_step_metric(horizon_step_metrics, metric_name):
+
+def plot_horizon_step_metric(horizon_step_metrics, label, color='b', ax=None):
     x_values = np.arange(1, len(horizon_step_metrics) + 1)
 
-    plt.grid(True)
-    plt.plot(x_values, horizon_step_metrics, label=metric_name)
-    plt.xlim(1, len(horizon_step_metrics) + 1)
+    if ax:
+        ax.plot(x_values, horizon_step_metrics, label=label, color=color)
+        ax.set_xlim(1, len(horizon_step_metrics) + 1)
+        return ax
+    else:
+        plt.grid(True)
+        plt.plot(x_values, horizon_step_metrics, label=label, color=color)
+        plt.xlim(1, len(horizon_step_metrics) + 1)
+
+        return x_values, horizon_step_metrics
 
 
 def plot_forecasts_scatterplot(forecasts, true_values, show_legend=False, ax=None):
@@ -130,7 +140,27 @@ def plot_forecasts_scatterplot(forecasts, true_values, show_legend=False, ax=Non
     return ax
 
 
-def plot_forecasts_scatterplot_at_horizon_step(forecasts, true_values, forecast_step):
+def plot_actual_prediction_scatterplot(forecasts, true_values, ax=None, label=None, color=None, scatter_kws=None):
+    if ax is None:
+        fig, ax = plt.subplots()
+
+    sns.regplot(x=true_values, y=forecasts, ax=ax, label=label, color=color, scatter_kws=scatter_kws)
+    plt.ylabel(f"Forecast")
+    plt.xlabel("True")
+
+    lims = [
+        np.min([ax.get_xlim(), ax.get_ylim()]),  # min of both axes
+        np.max([ax.get_xlim(), ax.get_ylim()]),  # max of both axes
+    ]
+
+    ax.plot(lims, lims, 'k-', alpha=0.75, zorder=0)
+    ax.set_aspect('equal')
+    ax.set_xlim(lims)
+    ax.set_ylim(lims)
+
+    return ax
+
+def plot_forecasts_scatterplot_at_horizon_step(forecasts, true_values, forecast_step, ax=None):
     """
 
     :param forecasts:
@@ -140,20 +170,25 @@ def plot_forecasts_scatterplot_at_horizon_step(forecasts, true_values, forecast_
     :return:
     """
 
-    _, true_values = extract_true_values_for_forecasts(true_values, forecasts)
-    #
-    # if isinstance(true_values, np.ndarray) is False:
-    #     true_values = np.asarray(true_values)
+    if isinstance(forecasts, list):
+        _, true_values = extract_true_values_for_forecasts(true_values, forecasts)
+        #
+        # if isinstance(true_values, np.ndarray) is False:
+        #     true_values = np.asarray(true_values)
 
-    if isinstance(forecasts, np.ndarray) is False:
-        forecasts = np.asarray(forecasts)
+        if isinstance(forecasts, np.ndarray) is False:
+            forecasts = np.asarray(forecasts)
 
-    horizon_size = forecasts.shape[1]
+        horizon_size = forecasts.shape[1]
 
-    true_values_ahead = true_values[:, forecast_step]
-    step_ahead_forecasts = forecasts[:, forecast_step]
+        true_values_ahead = true_values[:, forecast_step]
+        step_ahead_forecasts = forecasts[:, forecast_step]
+    else:
+        true_values_ahead = true_values
+        step_ahead_forecasts = forecasts
 
-    fig, ax = plt.subplots()
+    if ax is None:
+        fig, ax = plt.subplots()
     # ax.scatter(x=true_values_ahead, y=step_ahead_forecasts)
     sns.regplot(x=true_values_ahead, y=step_ahead_forecasts, ax=ax)
     plt.ylabel(f"{forecast_step} step ahead forecast")
