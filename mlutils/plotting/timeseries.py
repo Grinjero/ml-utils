@@ -26,7 +26,7 @@ def plot_series_scatterplot(series, labels=None, plot_column=None):
         plt.scatter(x=ts.index.values, y=ts.values)
 
 
-def plot_series_segments(series, index_pairs):
+def plot_series_segments(series, index_pairs, ax=None, plot_kwargs={}):
     """
     Plots the segments of the given series defined by `index_pairs`
 
@@ -35,7 +35,7 @@ def plot_series_segments(series, index_pairs):
     """
     for index_start, index_end in index_pairs:
         segment = series.loc[index_start:index_end]
-        segment.plot()
+        segment.plot(ax=ax, **plot_kwargs)
 
 
 def plot_seasonal_decompose(observed, seasonal, trend, resid, figsize=(20, 12), period_name=None):
