@@ -2,7 +2,6 @@ import matplotlib.animation as animation
 import matplotlib.pyplot as plt
 import seaborn as sns
 import numpy as np
-import wandb
 
 from pandas.tseries.frequencies import to_offset
 from mlutils.timeseries import extract_true_values_for_forecast, extract_true_values_for_forecasts
