@@ -31,7 +31,7 @@ def step_by_step_forecast(model, endog, horizon_length, exog=None, only_predicte
     try:
         extended_model = model.extend(endog, exog)
     except ValueError as e:
-        raise ValueError("Model can't be extended " + str(e))
+        raise ValueError("Model can't be extended\n" + str(e))
 
     forecasts = []
     for i in range(forecasting_start_index, len(endog) - horizon_length):
