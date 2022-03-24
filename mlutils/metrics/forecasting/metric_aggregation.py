@@ -51,7 +51,7 @@ def agg_forecast_origin_metrics(sample_forecasts, true_values, metric, skipna=Fa
     return pd.Series(index=step_index, data=step_metrics)
 
 
-def agg_forecast_origin_metrics_mask(sample_forecasts, true_values, metric, skipna=False, invalid_data_mask=None):
+def agg_forecast_origin_metrics_mask(sample_forecasts, true_values_series, metric, skipna=False, invalid_data_mask=None):
     """
     :param sample_forecasts: array like of shape (n_forecast_points, horizon_length)
     :param true_values: array like of shape (n_forecast_points + horizon_length) or same shape as :sample_forecasts
@@ -62,19 +62,31 @@ def agg_forecast_origin_metrics_mask(sample_forecasts, true_values, metric, skip
     :return: metric for each forecast point (n_forecast_points) indexed by the true values associated with those forecast
         points
     """
-    true_value_indices, true_values = _preprocess_true_values(true_values, sample_forecasts, skipna)
+    true_value_indices, true_values_stacked = _preprocess_true_values(true_values_series, sample_forecasts, skipna)
     stacked_forecasts = _preprocess_sample_forecasts(sample_forecasts)
+
+    if skipna:
+        true_value_origin_na_mask = np.isnan(true_values_stacked).any(axis=1)
+        forecasts_origin_na_mask = np.isnan(stacked_forecasts).any(axis=1)
+        origin_na_mask = true_value_origin_na_mask or forecasts_origin_na_mask
+
+    if invalid_data_mask is not None:
+        stacked_invalid_mask = align_series_list(ts_list=sample_forecasts, alignment_series=true_values_series)
+        stacked_invalid_mask = np.isnan(np.stack(stacked_invalid_mask))
+        origin_invalid_mask = stacked_invalid_mask.any(axis=1)
 
     step_metrics = []
     step_index = []
 
     for forecast_point_index in range(0, stacked_forecasts.shape[0]):
         if skipna:
-            if np.logical_or.reduce(np. isnan(true_values[forecast_point_index, :])) \
-                    or np.logical_or.reduce(np.isnan(stacked_forecasts[forecast_point_index, :])):
+            if origin_na_mask[forecast_point_index] is True:
+                continue
+        if invalid_data_mask is not None:
+            if origin_invalid_mask[forecast_point_index] is True:
                 continue
 
-        sample_true_values = true_values[forecast_point_index, :]
+        sample_true_values = true_values_stacked[forecast_point_index, :]
         forecast_metric = metric(sample_true_values, stacked_forecasts[forecast_point_index, :])
 
         step_metrics.append(forecast_metric)
@@ -152,13 +164,17 @@ def agg_horizon_step_metrics_masked(sample_forecasts, true_values_series, metric
         nan_mask_forecast = np.isnan(stacked_forecasts)
 
         if invalid_data_mask is not None:
-            align_series_list(ts_list=sample_forecasts, alignment_series=true_values_series)
+            stacked_invalid_mask = align_series_list(ts_list=sample_forecasts, alignment_series=true_values_series)
+            stacked_invalid_mask = np.stack(stacked_invalid_mask)
+
         if (nan_mask_true.sum() > 0) or (nan_mask_forecast.sum() > 0):
             # Mask each place where there is either a Na true value or forecast
             for i in range(len(stacked_forecasts)):
                 slice_obj = np.s_[i, None]
 
                 sample_forecast_mask = np.logical_or(nan_mask_forecast[slice_obj], nan_mask_true[slice_obj])
+                if invalid_data_mask is not None:
+                    sample_forecast_mask = np.logical_or(sample_forecast_mask, stacked_invalid_mask[slice_obj])
 
                 nan_mask_forecast[slice_obj] = sample_forecast_mask
                 nan_mask_true[slice_obj] = sample_forecast_mask
