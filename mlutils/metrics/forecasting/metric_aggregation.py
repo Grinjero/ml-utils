@@ -68,10 +68,10 @@ def agg_forecast_origin_metrics_mask(sample_forecasts, true_values_series, metri
     if skipna:
         true_value_origin_na_mask = np.isnan(true_values_stacked).any(axis=1)
         forecasts_origin_na_mask = np.isnan(stacked_forecasts).any(axis=1)
-        origin_na_mask = true_value_origin_na_mask or forecasts_origin_na_mask
+        origin_na_mask = np.logical_or(true_value_origin_na_mask, forecasts_origin_na_mask)
 
     if invalid_data_mask is not None:
-        stacked_invalid_mask = align_series_list(ts_list=sample_forecasts, alignment_series=true_values_series)
+        stacked_invalid_mask = align_series_list(ts_list=sample_forecasts, alignment_series=invalid_data_mask)
         stacked_invalid_mask = np.isnan(np.stack(stacked_invalid_mask))
         origin_invalid_mask = stacked_invalid_mask.any(axis=1)
 
@@ -164,10 +164,10 @@ def agg_horizon_step_metrics_masked(sample_forecasts, true_values_series, metric
         nan_mask_forecast = np.isnan(stacked_forecasts)
 
         if invalid_data_mask is not None:
-            stacked_invalid_mask = align_series_list(ts_list=sample_forecasts, alignment_series=true_values_series)
+            stacked_invalid_mask = align_series_list(ts_list=sample_forecasts, alignment_series=invalid_data_mask)
             stacked_invalid_mask = np.stack(stacked_invalid_mask)
 
-        if (nan_mask_true.sum() > 0) or (nan_mask_forecast.sum() > 0):
+        if (nan_mask_true.sum() > 0) or (nan_mask_forecast.sum() > 0) or invalid_data_mask is not None:
             # Mask each place where there is either a Na true value or forecast
             for i in range(len(stacked_forecasts)):
                 slice_obj = np.s_[i, None]
@@ -181,6 +181,8 @@ def agg_horizon_step_metrics_masked(sample_forecasts, true_values_series, metric
 
             true_values_stacked = np.ma.masked_array(true_values_stacked, mask=nan_mask_true)
             stacked_forecasts = np.ma.masked_array(stacked_forecasts, mask=nan_mask_forecast)
+
+        print("Num masked in total: ", np.ma.count_masked(stacked_forecasts))
 
     for horizon_step in range(horizon_size):
         predicted_horizon_steps = stacked_forecasts[:, horizon_step]
