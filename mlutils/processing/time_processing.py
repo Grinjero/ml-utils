@@ -64,14 +64,14 @@ def cyclic_week_transformation(dataset, datetime_column=None):
     dataset["polar_week_time_cos"] = week_cos
 
 
-def _weekday_encoding(dataset):
-    dataset["weekday"] = dataset[date_column].dt.weekday
-    one_hot_encodings = pd.get_dummies(dataset.weekday, prefix='weekday')
-    dataset[one_hot_encodings.columns.values.tolist()] = one_hot_encodings
-
 def weekday_encoding(date_column):
-    weekday_column = date_column.dt.weekday
+    if isinstance(date_column, pd.DatetimeIndex):
+        weekday_column = date_column.dayofweek
+        weekday_column = pd.Series(index=date_column, data=weekday_column)
+    else:
+        weekday_column = date_column.dt.weekday
     one_hot_encodings = pd.get_dummies(weekday_column, prefix='weekday')
+
     return one_hot_encodings
 
 

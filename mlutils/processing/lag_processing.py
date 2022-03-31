@@ -1,6 +1,7 @@
 import numpy as np
 import pandas as pd
 
+
 def lag_features(lags, series_to_lag):
     """
     :param lags: list of ints representing lags
@@ -14,12 +15,13 @@ def lag_features(lags, series_to_lag):
     new_feature_names = []
     for lag in lags:
         lagged_feature_name = feature_name
-        if lag > 0:
-            lagged_feature_name += "+"
-        lagged_feature_name += str(lag)
+        if lag < 0:
+            lagged_feature_name += f"+{-lag}"
+        else:
+            lagged_feature_name += str(-lag)
 
         new_feature_names.append(lagged_feature_name)
-        lagged_series = series_to_lag.shift(-lag)
+        lagged_series = series_to_lag.shift(lag)
         new_df[lagged_feature_name] = lagged_series
     new_df = new_df.drop(columns=feature_name)
     return new_df, new_feature_names
