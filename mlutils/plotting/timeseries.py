@@ -3,7 +3,7 @@ import matplotlib.pyplot as plt
 from statsmodels.tsa import seasonal
 
 
-def plot_series(series, labels=None, plot_column=None):
+def plot_series(series, labels=None, plot_column=None, matplotlib_kwargs={}):
     if plot_column is None:
         plot_column = 0
 
@@ -11,7 +11,7 @@ def plot_series(series, labels=None, plot_column=None):
         assert len(series) == len(labels), "Number of labels must be equal to number of series"
 
     for ts in series:
-        ts.plot(y=plot_column)
+        ts.plot(y=plot_column, **matplotlib_kwargs)
 
 
 def plot_series_scatterplot(series, labels=None, plot_column=None):
